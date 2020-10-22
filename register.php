@@ -1,6 +1,6 @@
 <?php 
-    require("common.php"); 
-     
+    require("conn.php"); 
+         session_start(); 
     if(!empty($_POST)) 
     { 
 
