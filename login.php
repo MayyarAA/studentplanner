@@ -1,7 +1,7 @@
 <?php 
 
     require("conn.php"); 
-     session_start():
+     session_start();
     $submitted_username = ''; 
     if(!empty($_POST)) 
     { 
