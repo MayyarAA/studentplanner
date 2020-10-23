@@ -4,7 +4,7 @@
     if(!empty($_POST)) 
     { 
 
-        if(empty($_POST['username'])) 
+        if(empty($_POST['WATIAM'])) 
         { 
 
             die("Please enter a username."); 
