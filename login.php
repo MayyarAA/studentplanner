@@ -54,7 +54,7 @@
         else 
         { 
             print("Login Failed."); 
-            $submitted_username = htmlentities($_POST['username'], ENT_QUOTES, 'UTF-8'); 
+            $submitted_username = htmlentities($_POST['WATIAM'], ENT_QUOTES, 'UTF-8'); 
         } 
     } 
   
