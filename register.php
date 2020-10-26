@@ -64,9 +64,6 @@
          
         $password = hash('sha256', $_POST['password']); 
          
-
-        
-
         $query_params = array( 
             ':WATIAM' => $_POST['WATIAM'], 
             ':firstName' => $_POST['firstName'], 
@@ -88,11 +85,8 @@
         header("Location: login.php"); 
 
         die("Redirecting to login.php"); 
-
-        
-        
+  
     } 
-
 
 ?> 
 <!-- <h1>Register</h1> 
