@@ -6,7 +6,6 @@
 
         if(empty($_POST['WATIAM']))  //Ensure the username is not blank
         { 
-
             die("Please enter a username."); 
         } 
          
@@ -14,12 +13,9 @@
         { 
             die("Please enter a password."); 
         } 
-        
-        
-     //Here we make sure the username is not already in use
+    //Here we make sure the username is not already in use
         $query = " 
             SELECT 
-                1 
             FROM user 
             WHERE 
                 WATIAM = :WATIAM 
@@ -45,7 +41,7 @@
             die("This username is already in use"); 
         } 
        
-         //Prepare the variables to be inserted for our new user. 
+  //Prepare the variables to be inserted for our new user. 
         $query = " 
             INSERT INTO user ( 
                 WATIAM, 
@@ -64,9 +60,7 @@
          //Hash the password instead of using plaintext, so that the site owners do not know the user's password.
         $password = hash('sha256', $_POST['password']); 
          
-
-        
-        //Bind the user's inputs to the query that is about to be ran.
+  //Bind the user's inputs to the query that is about to be ran.
         $query_params = array( 
             ':WATIAM' => $_POST['WATIAM'], 
             ':firstName' => $_POST['firstName'], 
@@ -84,33 +78,10 @@
         { 
             die("Failed to run query. Insert user" ); 
         } 
-         //Redirect to login if successful
-        header("Location: login.php"); 
 
-        die("Redirecting to login.php"); 
+     //Redirect to index if successful
+	        header("Location: index.html"); 
 
-        
-        
     } 
 
-
 ?> 
-<h1>Register</h1> 
-<form action="register.php" method="post"> 
-    Username:<br /> 
-    <input type="text" name="WATIAM" value="" /> 
-    <br /><br /> 
-    First Name:<br /> 
-    <input type="text" name="firstName" value="" /> 
-    <br /><br /> 
-    Last Name:<br /> 
-    <input type="text" name="lastName" value="" /> 
-    <br /><br /> 
-    Program:<br /> 
-    <input type="text" name="program" value="" /> 
-    <br /><br /> 
-    Password:<br /> 
-    <input type="password" name="password" value="" /> 
-    <br /><br /> 
-    <input type="submit" value="Register" /> 
-</form>

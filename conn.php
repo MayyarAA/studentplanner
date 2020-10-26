@@ -1,7 +1,7 @@
 <?php
 $username = 'wmmeyer'; 
-$password = '342Group8!'; 
-$host = "localhost";
+$password = '342Group8!?'; 
+$host = "mansci-db.uwaterloo.ca";
 $dbname = 'wmmeyer'; 
 $conn = new mysqli($host, $username, $password, $dbname);
     try 

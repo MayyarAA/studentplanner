@@ -44,10 +44,10 @@
          
         if($login_ok) 
         { 
-            unset($row['passwordHash']); //Take out the password hash from the returned row variable, we don't need this to be in the session.
+
+            unset($row['passwordHash']);  //Take out the password hash from the returned row variable, we don't need this to be in the session.
             $_SESSION['user'] = $row; //Now put all variablse (except our password hash) into the php session so the rest of the website can use it.
-              header("Location: index.php");  //Redirect the user to the index.php page
-            die("Redirecting to: index.php"); 
+            header("Location: boardView.html");   //Redirect the user to the index.php page
         } 
         else 
         { 
@@ -57,14 +57,4 @@
     } 
   
 ?> 
-<h1>Login</h1> 
-<form action="login.php" method="post"> 
-    WATIAM:<br /> 
-    <input type="text" name="WATIAM" value="<?php echo $submitted_username; ?>" /> 
-    <br /><br /> 
-    Password:<br /> 
-    <input type="password" name="password" value="" /> 
-    <br /><br /> 
-    <input type="submit" value="Login" /> 
-</form> 
-<a href="register.php">Register</a>
+
