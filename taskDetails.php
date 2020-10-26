@@ -1,4 +1,5 @@
 <?php
+//This file contains the php code for inserting tast detail data from the html form
 
 //declaring local php variables 
 $submitted_tastName = $_POST['taskTitle'];
