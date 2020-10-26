@@ -3,6 +3,7 @@ $username = 'wmmeyer';
 $password = '342Group8!'; 
 $host = "localhost";
 $dbname = 'wmmeyer'; 
+$conn = new mysqli($host, $username, $password, $dbname);
     try 
     { 
         $db = new PDO("mysql:host={$host};dbname={$dbname};charset=utf8", $username, $password); 
