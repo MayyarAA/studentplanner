@@ -59,14 +59,4 @@
     } 
   
 ?> 
-<!-- <h1>Login</h1> 
-<form action="login.php" method="post"> 
-    WATIAM:<br /> 
-    <input type="text" name="WATIAM" value="<?php echo $submitted_username; ?>" /> 
-    <br /><br /> 
-    Password:<br /> 
-    <input type="password" name="password" value="" /> 
-    <br /><br /> 
-    <input type="submit" value="Login" /> 
-</form> 
-<a href="register.php">Register</a> -->
+
