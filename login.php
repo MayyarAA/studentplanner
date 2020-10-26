@@ -33,9 +33,6 @@
         $row = $stmt->fetch(); 
         if($row) 
         { 
-            // Using the password submitted by the user and the salt stored in the database, 
-            // we now check to see whether the passwords match by hashing the submitted password 
-            // and comparing it to the hashed version already stored in the database. 
             $check_password = hash('sha256', $_POST['password']); 
              
             if($check_password === $row['passwordHash']) 
