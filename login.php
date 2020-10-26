@@ -6,8 +6,6 @@
     if(!empty($_POST)) 
     { 
 
-
-        
         $query = " 
             SELECT 
                 WATIAM, 
@@ -50,8 +48,8 @@
         { 
             unset($row['passwordHash']); 
             $_SESSION['user'] = $row; 
-              header("Location: index.php"); 
-            die("Redirecting to: index.php"); 
+              header("Location: boardView.html"); 
+            die("Redirecting to: boardView.html"); 
         } 
         else 
         { 
