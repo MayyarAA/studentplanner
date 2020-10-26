@@ -95,7 +95,7 @@
 
 
 ?> 
-<h1>Register</h1> 
+<!-- <h1>Register</h1> 
 <form action="register.php" method="post"> 
     Username:<br /> 
     <input type="text" name="WATIAM" value="" /> 
@@ -113,4 +113,4 @@
     <input type="password" name="password" value="" /> 
     <br /><br /> 
     <input type="submit" value="Register" /> 
-</form>
+</form> -->

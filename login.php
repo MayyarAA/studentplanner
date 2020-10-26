@@ -6,6 +6,8 @@
     if(!empty($_POST)) 
     { 
 
+
+        
         $query = " 
             SELECT 
                 WATIAM, 
@@ -59,7 +61,7 @@
     } 
   
 ?> 
-<h1>Login</h1> 
+<!-- <h1>Login</h1> 
 <form action="login.php" method="post"> 
     WATIAM:<br /> 
     <input type="text" name="WATIAM" value="<?php echo $submitted_username; ?>" /> 
@@ -69,4 +71,4 @@
     <br /><br /> 
     <input type="submit" value="Login" /> 
 </form> 
-<a href="register.php">Register</a>
+<a href="register.php">Register</a> -->
