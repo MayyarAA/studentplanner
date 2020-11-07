@@ -20,7 +20,7 @@
 require("conn.php"); 
 
 if (!empty($_POST['name'])){
-	//the user submitted a new list request
+	//If the user submitted a new list request we run this code
 	$query = " 
             INSERT INTO taskList ( 
                 listTitle, 
@@ -31,7 +31,7 @@ if (!empty($_POST['name'])){
             ) 
         "; 
         $query_params = array( 
-            ':listTitle' => $_POST['name'], 
+            ':listTitle' => $_POST['name'], //Insert the user's input into the database
             ':boardID' => 1 //Placeholder until we develop the board view function
         ); 
         $stmt = $db->prepare($query); 
@@ -44,7 +44,7 @@ $stmt = $db->prepare('SELECT * FROM taskList ORDER BY `listID` ASC');
             $lists = $stmt->fetchAll();
 echo "<div class='row'>";
 foreach ($lists as $list){
-	//This code is run for each list
+	//This code is run FOR EACH list that exists.
 	echo "
 	<div class='col-xs-3'>
 	<div class='card'>
@@ -57,6 +57,7 @@ foreach ($lists as $list){
             $stmt->execute(array($list['listID']));       
             $tasks = $stmt->fetchAll();
             foreach ($tasks as $task){
+            	//This code is run FOR EACH task in each list. Here we output an html row with some data.
             	echo "<li class='list-group-item'>".$task['taskTitle'].": ".$task['description']."</li>";
             }
     echo " 
@@ -65,7 +66,7 @@ foreach ($lists as $list){
 	</div>";
 }
 echo "</div>";
-
+//Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
 <div class="modal fade" id="createTask" tabindex="-1" aria-labelledby="createTask" aria-hidden="true">
   <div class="modal-dialog">
