@@ -13,8 +13,8 @@
         <h2 class="text-center">List View</h2>
 	<br>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTask">
-  Create Task
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
+  Create List
 </button>
 <?php
 require("conn.php"); 
@@ -68,7 +68,7 @@ foreach ($lists as $list){
 echo "</div>";
 //Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
-<div class="modal fade" id="createTask" tabindex="-1" aria-labelledby="createTask" aria-hidden="true">
+<div class="modal fade" id="createTask" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
