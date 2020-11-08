@@ -1,5 +1,4 @@
 .row {
-    /* background-color: black; */
     margin: 0% 5% 5% 5%;
 }
 
@@ -21,10 +20,6 @@
     border: none;
 }
 
-.card-Title {
-    /* display: inline block; */
-}
-
 .card-Title button {
     float: right;
     padding: 0%;
@@ -43,8 +38,4 @@
     visibility: visible;
     background-color: #e0ebeb;
     border: none;
-}
-
-.list-group-item .btn:hover {
-    /* background-color: #99ebff; */
 }

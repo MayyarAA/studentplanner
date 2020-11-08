@@ -24,7 +24,7 @@ die();
         </div>
     </div>
   <!-- button to create newlist-->
-  <button type="button" class="btn btn-primary" style='margin-left: 5%;' data-toggle="modal" data-target="#createList">
+  <button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#createList">
   Create List
   </button>
 
