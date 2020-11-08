@@ -65,7 +65,7 @@ if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
         "; 
         $query_params = array( 
             ':new_name' => $_POST['new_name'], // set the new name of the list
-            ':old_name' => $_POST['old_name'] // query for old name
+            ':old_name' => $_POST['old_name'] // parameter for old/existing list title
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
@@ -123,7 +123,7 @@ echo "</div>";
   </div>
 </div>
 
-<!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title and new title as input, both in the form of a textbox-->
+<!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title(from dropdown) and new title(from textbox) as input-->
 <div class="modal fade" id="editList" tabindex="-1" aria-labelledby="editList" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
