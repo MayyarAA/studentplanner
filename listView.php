@@ -20,9 +20,10 @@ die();
         <h2 class="text-center">List View</h2>
 	<br>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
+  <!-- button to create newlist-->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
   Create List
-</button>
+  </button>
 <?php
 require("conn.php"); 
 //If we have a delete function posted lets process it.
@@ -78,6 +79,7 @@ foreach ($lists as $list){
 	</div>";
 }
 echo "</div>";
+
 //Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
 <div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
@@ -100,6 +102,8 @@ echo "</div>";
     </div>
   </div>
 </div>
+
+<!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
 <div class="modal fade" id="viewTask" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -116,6 +120,8 @@ echo "</div>";
   </div>
 </div>
 <script>
+
+// function to refresh the modal page for task details
 function dynamicModal(str)
 {
 $("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/wmmeyer/viewTask.php?id="+str);
