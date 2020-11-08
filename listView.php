@@ -24,6 +24,11 @@ die();
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
   Create List
   </button>
+  <!-- button to edit title of an existing list -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editList">
+  Edit List Title
+  </button>
+
 <?php
 require("conn.php"); 
 //If we have a delete function posted lets process it.
@@ -46,6 +51,21 @@ if (!empty($_POST['name'])){
         $query_params = array( 
             ':listTitle' => $_POST['name'], //Insert the user's input into the database
             ':boardID' => 1 //Placeholder until we develop the board view function
+        ); 
+        $stmt = $db->prepare($query); 
+       	$result = $stmt->execute($query_params); 
+}
+
+if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
+	//If the user requests to change the name of existing lists, this code is run
+	$query = " 
+            UPDATE taskList 
+            SET listTitle = :new_name 
+            WHERE listTitle = :old_name
+        "; 
+        $query_params = array( 
+            ':new_name' => $_POST['new_name'], // set the new name of the list
+            ':old_name' => $_POST['old_name'] // query for old name
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
@@ -102,6 +122,33 @@ echo "</div>";
     </div>
   </div>
 </div>
+
+<!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title and new title as input, both in the form of a textbox-->
+<div class="modal fade" id="editList" tabindex="-1" aria-labelledby="editList" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit List Name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-ListName" method="POST">
+
+            <label for="inputName" class="sr-only">From</label>
+            <input type="text" name="old_name" value="" class="form-control" placeholder="Original List Name" required/>
+            <br>
+            <label for="inputName" class="sr-only">To</label>
+            <input type="text" name="new_name" value="" class="form-control" placeholder="New List Name" required/>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Update Title</Title></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
 <div class="modal fade" id="viewTask" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
