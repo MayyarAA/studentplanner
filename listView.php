@@ -142,7 +142,7 @@ echo "</div>";
             $lists = $stmt->fetchAll();
             </script>
 
-            <select name="old_name" required>
+            <select name="old_name" class="form-control" required>
             <option value="" disabled selected>Select List</option>
             <?php foreach($lists as $list): ?>
               <option value = "<?= $list['listTitle']; ?>"><?= $list['listTitle']; ?></option>
