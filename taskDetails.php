@@ -18,7 +18,7 @@ echo $submitted_taskTypeWork;
 
 //imports the objects and valiues from conn
 require("conn.php"); 
-$sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) VALUES (null, '$submitted_tastName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskDateDue, '$submitted_taskTypeWork', '111', '1', '1');";
+$sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) VALUES (null, '$submitted_tastName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', '1', '1');";
 //executes the post call
 $result = mysqli_query($conn, $sql);
 echo $result;
