@@ -23,7 +23,15 @@ die();
             <h1 class="display-3">BoardView</h1>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" style='margin-left: 5%;' data-toggle="modal" data-target="#createList">Create List</button>
+  <!-- button to create newlist-->
+  <button type="button" class="btn btn-primary" style='margin-left: 5%;' data-toggle="modal" data-target="#createList">
+  Create List
+  </button>
+
+  <!-- button to edit title of an existing list -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editList">
+  Edit List Title
+  </button>
 
 <?php
 require("conn.php"); 
@@ -36,6 +44,7 @@ $stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
 }
 //If the user submitted a new list request we run this code
 if (!empty($_POST['name'])){
+	//If the user submitted a new list request we run this code - takes the list title(String) and the board ID (integer) as its input
 	$query = " 
             INSERT INTO taskList ( 
                 listTitle, 
@@ -48,6 +57,21 @@ if (!empty($_POST['name'])){
         $query_params = array( 
             ':listTitle' => $_POST['name'], //Insert the user's input into the database
             ':boardID' => 1 //Placeholder until we develop the board view function
+        ); 
+        $stmt = $db->prepare($query); 
+       	$result = $stmt->execute($query_params); 
+}
+
+if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
+	//If the user requests to change the name of existing lists, this code is run - takes the old name, and new name, both strings as its input
+	$query = " 
+            UPDATE taskList 
+            SET listTitle = :new_name 
+            WHERE listTitle = :old_name
+        "; 
+        $query_params = array( 
+            ':new_name' => $_POST['new_name'], // set the new name of the list
+            ':old_name' => $_POST['old_name'] // parameter for old/existing list title
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
@@ -85,6 +109,7 @@ foreach ($lists as $list){
 	</div>";
 }
 echo "</div>";
+
 //Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
 <div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
@@ -106,27 +131,50 @@ echo "</div>";
     </div>
   </div>
 </div>
-<!-- popup to make sure if user wants to delete the task list -->
-<!-- <div class="modal fade" id="DeleteList" tabindex="-1" aria-labelledby="DeleteList" aria-hidden="true">
+
+<!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title(from dropdown) and new title(from textbox) as input-->
+<div class="modal fade" id="editList" tabindex="-1" aria-labelledby="editList" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="DeleteListTitle">Delete </h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit List Name</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form action="" class="form-newList" method="POST">
-          <p>Are you sure you want to delete this list?</p>
-          <button class="btn btn-lg btn-primary btn-block" type="submit" name="Yes" value="Yes">Yes</button>
-          <button class="btn btn-lg btn-primary btn-block" type="submit" name="No" value="No">No</button>
+        <form action="" class="edit-ListName" method="POST">
+          <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
+            <script>
+            $stmt = $db->prepare('SELECT * FROM taskList');
+            $stmt->execute();       
+            $lists = $stmt->fetchAll();
+            </script>
+
+            <select name="old_name" class="form-control" required>
+            <option value="" disabled selected>Select List</option>
+            <?php foreach($lists as $list): ?>
+              <option value = "<?= $list['listTitle']; ?>"><?= $list['listTitle']; ?></option>
+            <?php endforeach; ?>
+            </select>
+
+            <br>
+            <!-- old code for text input
+            <label for="inputName" class="sr-only">From</label>
+            <input type="text" name="old_name" value="" class="form-control" placeholder="Original List Name" required/> -->
+            <br>
+            <label for="inputName" class="sr-only">To</label>
+            <input type="text" name="new_name" value="" class="form-control" placeholder="New List Name" required/>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Update Title</Title></button>
         </form>
       </div>
     </div>
   </div>
-</div> -->
-<!-- popup to view task details -->
+</div>
+
+
+<!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
 <div class="modal fade" id="viewTask" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -143,6 +191,8 @@ echo "</div>";
   </div>
 </div>
 <script>
+
+// function to refresh the modal page for task details
 function dynamicModal(str)
 {
 $("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/r2/studentplanner/viewTask.php?id="+str);
