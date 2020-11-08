@@ -38,7 +38,7 @@ $stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
             $task = $stmt->fetch();
 }
 if (!empty($_POST['name'])){
-	//If the user submitted a new list request we run this code
+	//If the user submitted a new list request we run this code - takes the list title(String) and the board ID (integer) as its input
 	$query = " 
             INSERT INTO taskList ( 
                 listTitle, 
@@ -57,7 +57,7 @@ if (!empty($_POST['name'])){
 }
 
 if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
-	//If the user requests to change the name of existing lists, this code is run
+	//If the user requests to change the name of existing lists, this code is run - takes the old name, and new name, both strings as its input
 	$query = " 
             UPDATE taskList 
             SET listTitle = :new_name 
