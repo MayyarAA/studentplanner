@@ -83,7 +83,7 @@ $submitted_taskListAssigned = $_POST['listID'];
 //imports the objects and valiues from conn
 require("conn.php"); 
 $sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) 
-        VALUES (null, '$submitted_tastName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', $submitted_taskListAssigned , '1');";
+        VALUES (null, '$submitted_taskName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', $submitted_taskListAssigned , '1');";
 //executes the post call
 $result = mysqli_query($conn, $sql);
 
