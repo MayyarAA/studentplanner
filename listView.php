@@ -33,6 +33,12 @@ die();
   Edit List Title
   </button>
 
+  <form action = "taskDetails.php" method = "Post"> 
+    <button type="submit" class="btn btn-primary">
+    Add new task
+    </button>
+  </form>
+
 <?php
 require("conn.php"); 
 
