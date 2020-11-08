@@ -30,7 +30,7 @@
         <div class="container">
         <div class ="row">
             <div class="col">
-            <select name = "ListTitle">
+            <select name = "listID">
                 <?php
                     require("conn.php"); 
                     
@@ -80,23 +80,12 @@ $submitted_taskDateDue= $_POST['taskDateDue'];
 $submitted_taskTypeWork= $_POST['taskTypeWork'];
 $submitted_taskListAssigned = $_POST['listID'];
 
-//binding php var to sql object
-echo $submitted_tastName;
-echo $submitted_taskDetail;
-echo $submitted_taskEffort;
-echo $submitted_taskDateDue;
-echo $submitted_taskTypeWork;
-echo $submitted_taskListAssigned;
 //imports the objects and valiues from conn
 require("conn.php"); 
-$sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) VALUES (null, '$submitted_tastName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', '1', '1');";
+$sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) 
+        VALUES (null, '$submitted_tastName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', $submitted_taskListAssigned , '1');";
 //executes the post call
 $result = mysqli_query($conn, $sql);
-echo $result;
-
-      
-
-
 
 ?>
 
