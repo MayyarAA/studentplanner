@@ -52,7 +52,7 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
     </tr>
   </tbody>
 </table>
-<form action="listView.php" onclick="window.top.location = 'https://mansci-db.uwaterloo.ca/~wmmeyer/wmmeyer/listView.php?r=t'" class="form-newList" method="POST">
+<form action="listView.php" onclick="window.top.location = 'https://mansci-db.uwaterloo.ca/~wmmeyer/r2/studentplanner/listView.php?r=t'" class="form-newList" method="POST">
  <input type="hidden" id="deleteID" name="deleteID" value="<?php echo $_GET['id']; ?>">
 <input type="submit" class="btn btn-danger" name="delete" value="Delete Task"></input>
 </form>
