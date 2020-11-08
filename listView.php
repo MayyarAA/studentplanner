@@ -23,7 +23,7 @@ if (!empty($_POST['name'])){
 	//If the user submitted a new list request we run this code
 	$query = " 
             INSERT INTO taskList ( 
-                listTitle, 
+                listTitle,
                 boardID
             ) VALUES ( 
                 :listTitle, 
@@ -36,6 +36,15 @@ if (!empty($_POST['name'])){
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
+}
+if (!empty($_list_to_delete['name'])){
+	//If the user submitted a new delete list request we run this code
+	$query = " 
+            delete FROM taskList 
+            WHERE listTitle = ':listTitle' "; 
+        $query_params = ':listTitle' => $_list_to_delete['name']; //Insert the user's input into the database 
+        $stmt = $db->prepare($query); 
+         $result = $stmt->execute($query_params); 
 }
 
 // get complete details for a list
@@ -83,6 +92,26 @@ echo "</div>";
             <label for="inputName" class="sr-only">List Name</label>
             <input type="text" name="name" value="" class="form-control" placeholder="List Name" required/>
             <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="form-newList" method="POST">
+
+            <label for="inputName" class="sr-only">List Name</label>
+            <input type="text" name="name" value="" class="form-control" placeholder="List Name" required/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Delete</button>
         </form>
       </div>
     </div>
