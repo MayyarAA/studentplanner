@@ -135,9 +135,24 @@ echo "</div>";
       </div>
       <div class="modal-body">
         <form action="" class="edit-ListName" method="POST">
+          <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
+            <script>
+            $stmt = $db->prepare('SELECT * FROM taskList');
+            $stmt->execute();       
+            $lists = $stmt->fetchAll();
+            </script>
 
+            <select name="old_name" required>
+            <option value="" disabled selected>Select List</option>
+            <?php foreach($lists as $list): ?>
+              <option value = "<?= $list['listTitle']; ?>"><?= $list['listTitle']; ?></option>
+            <?php endforeach; ?>
+            </select>
+
+            <br>
+            <!-- old code for text input
             <label for="inputName" class="sr-only">From</label>
-            <input type="text" name="old_name" value="" class="form-control" placeholder="Original List Name" required/>
+            <input type="text" name="old_name" value="" class="form-control" placeholder="Original List Name" required/> -->
             <br>
             <label for="inputName" class="sr-only">To</label>
             <input type="text" name="new_name" value="" class="form-control" placeholder="New List Name" required/>
