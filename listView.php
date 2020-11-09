@@ -96,7 +96,7 @@ if (!empty($_POST['old_ID']) && !empty($_POST['new_name'])){
 if (!empty($_POST['Delete_listID'])){
 	//If the user submitted a new delete list request we run this code - takes the list's id as input
 	$query = " 
-            DELETE FROM taskList    // deleting list from the task list 
+            DELETE FROM taskList    
             WHERE listID = :Delete_listID "; 
         $query_params = array (
           ':Delete_listID' => $_POST['Delete_listID'] //Delete list
