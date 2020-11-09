@@ -68,27 +68,29 @@ if (!empty($_POST['name'])){
        	$result = $stmt->execute($query_params); 
 }
 
-if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
+if (!empty($_POST['oldID']) && !empty($_POST['new_name'])){
 	//If the user requests to change the name of existing lists, this code is run - takes the old name, and new name, both strings as its input
 	$query = " 
             UPDATE taskList 
             SET listTitle = :new_name 
-            WHERE listTitle = :old_name
+            WHERE listID = :oldID
         "; 
         $query_params = array( 
             ':new_name' => $_POST['new_name'], // set the new name of the list
-            ':old_name' => $_POST['old_name'] // parameter for old/existing list title
+            ':oldID' => $_POST['oldID'] // parameter for old/existing list title
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
 }
 
-if (!empty($_list_to_delete['name'])){
+if (!empty($_POST['Delete_listID'])){
 	//If the user submitted a new delete list request we run this code
 	$query = " 
             delete FROM taskList 
-            WHERE listTitle = ':listTitle' "; 
-        $query_params = ':listTitle' => $_list_to_delete['name']; //Insert the user's input into the database 
+            WHERE listID = ':Delete_listID' "; 
+        $query_params = array(
+          ':Delete_listID' => $_POST['Delete_listID'] //Delete list
+        );
         $stmt = $db->prepare($query); 
          $result = $stmt->execute($query_params); 
 }
@@ -148,7 +150,7 @@ echo "</div>";
   </div>
 </div>
 
-<div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
+<div class="modal fade" id="DeleteList" tabindex="-1" aria-labelledby="DeleteList" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -161,7 +163,7 @@ echo "</div>";
         <form action="" class="form-newList" method="POST">
 
             <label for="inputName" class="sr-only">List Name</label>
-            <input type="text" name="name" value="" class="form-control" placeholder="List Name" required/>
+            <input type="text" name="Delete_listID" value="" class="form-control" placeholder="List Name" required/>
             <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Delete</button>
         </form>
       </div>
@@ -188,10 +190,10 @@ echo "</div>";
             $lists = $stmt->fetchAll();
             </script>
 
-            <select name="old_name" class="form-control" required>
+            <select name="oldID" class="form-control" required>
             <option value="" disabled selected>Select List</option>
             <?php foreach($lists as $list): ?>
-              <option value = "<?= $list['listTitle']; ?>"><?= $list['listTitle']; ?></option>
+              <option value = "<?= $list['listID']; ?>"><?= $list['listTitle']; ?></option>
             <?php endforeach; ?>
             </select>
 
@@ -221,7 +223,7 @@ echo "</div>";
         </button>
       </div>
       <div class="modal-body">
-        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:458px; height:500px;" src="sample.com"></iframe>
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:458px; height:500px;" src="viewTask.php"></iframe>
       </div>
     </div>
   </div>
