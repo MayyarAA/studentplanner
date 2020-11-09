@@ -28,8 +28,8 @@ die();
   Create List
   </button>
 
-<!-- button to delete list -->
-<button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#deleteList">
+  <!-- button to delete list -->
+  <button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#deleteList">
   Delete List
   </button>
 
@@ -47,15 +47,16 @@ die();
 <?php
 require("conn.php"); 
 
-//If we have a delete function posted lets process it.
+//If we have a delete task function posted lets process it.
 if (!empty($_POST['deleteID'])){
 $stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
             $stmt->execute(array($_POST['deleteID']));       
             $task = $stmt->fetch();
 }
+
 //If the user submitted a new list request we run this code
 if (!empty($_POST['name'])){
-	//If the user submitted a new list request we run this code - takes the list title(String) and the board ID (integer) as its input
+	//If the user submitted a new list request we run this code - the query takes the list title(String) and the board ID (integer) as its input
 	$query = " 
             INSERT INTO taskList ( 
                 listTitle, 
@@ -74,7 +75,7 @@ if (!empty($_POST['name'])){
 }
 
 if (!empty($_POST['old_ID']) && !empty($_POST['new_name'])){
-	//If the user requests to change the name of existing lists, this code is run - takes the old name, and new name, both strings as its input
+	//If the user requests to change the name of existing lists, this code is run - takes the original list's ID, and new name for the list as its input
 	$query = " 
             UPDATE taskList 
             SET listTitle = :new_name 
@@ -89,7 +90,7 @@ if (!empty($_POST['old_ID']) && !empty($_POST['new_name'])){
 }
 
 if (!empty($_POST['Delete_listID'])){
-	//If the user submitted a new delete list request we run this code
+	//If the user submitted a new delete list request we run this code - takes the list's id as input
 	$query = " 
             DELETE FROM taskList    // deleting list from the task list 
             WHERE listID = :Delete_listID "; 
@@ -154,19 +155,20 @@ echo "</div>";
     </div>
   </div>
 </div>
+
 <!--Below we have the code for our "modal" for the user to delete a list. this takes the list id and deletes that particular list -->
 <div class="modal fade" id="deleteList" tabindex="-1" aria-labelledby="deleteList" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">delete List</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form action="" class="edit-ListName" method="POST">
-          <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
+          <!-- Obtain the existing list titles, and display them in a dropdown list, so the user can choose the list they want to delete -->
             <script>
             $stmt = $db->prepare('SELECT * FROM taskList');
             $stmt->execute();       
@@ -179,7 +181,6 @@ echo "</div>";
               <option value = "<?= $list['listID']; ?>"><?= $list['listTitle']; ?></option>
             <?php endforeach; ?>
             </select>
-
             <br>
             <br>
             <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Delete List</Title></button>
@@ -188,6 +189,7 @@ echo "</div>";
     </div>
   </div>
 </div>
+
 <!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title(from dropdown) and new title(from textbox) as input-->
 <div class="modal fade" id="editList" tabindex="-1" aria-labelledby="editList" aria-hidden="true">
   <div class="modal-dialog">
@@ -213,11 +215,7 @@ echo "</div>";
               <option value = "<?= $list['listID']; ?>"><?= $list['listTitle']; ?></option>
             <?php endforeach; ?>
             </select>
-
             <br>
-            <!-- old code for text input
-            <label for="inputName" class="sr-only">From</label>
-            <input type="text" name="old_name" value="" class="form-control" placeholder="Original List Name" required/> -->
             <br>
             <label for="inputName" class="sr-only">To</label>
             <input type="text" name="new_name" value="" class="form-control" placeholder="New List Name" required/>
@@ -228,7 +226,6 @@ echo "</div>";
     </div>
   </div>
 </div>
-
 
 <!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
 <div class="modal fade" id="viewTask" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
