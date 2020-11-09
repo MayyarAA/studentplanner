@@ -206,11 +206,11 @@ echo "</div>";
       <div class="modal-body">
         <form action="" class="edit-ListName" method="POST">
           <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
-            <script>
+            <?php
             $stmt = $db->prepare('SELECT * FROM taskList');
             $stmt->execute();       
             $lists = $stmt->fetchAll();
-            </script>
+            ?>
 
             <select name="oldID" class="form-control" required>
             <option value="" disabled selected>Select List</option>
@@ -237,7 +237,7 @@ echo "</div>";
 <!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
 <div class="modal fade" id="viewTask" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="width:578px;">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Task view</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -255,11 +255,14 @@ echo "</div>";
 // function to refresh the modal page for task details
 function dynamicModal(str)
 {
-$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/r2/studentplanner/viewTask.php?id="+str);
+$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/viewTask.php?id="+str);
 }
 </script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script>$('#viewTask').on('hidden.bs.modal', function () {
+ location.reload();
+})</script>
 </body>
