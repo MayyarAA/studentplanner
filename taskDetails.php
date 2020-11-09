@@ -87,6 +87,9 @@ $sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `ta
 //executes the post call
 $result = mysqli_query($conn, $sql);
 
+if ($result) {
+    header("Location: listView.php");
+}
 ?>
 
 

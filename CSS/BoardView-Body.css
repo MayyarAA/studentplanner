@@ -1,10 +1,20 @@
 .row {
-    /* background-color: black; */
     margin: 0% 5% 5% 5%;
+}
+
+.editfeatures {
+    display: flex;
+    margin-left: 5.7%;
+}
+
+.editfeatures button {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .card {
     margin: 20px 20px 20px 20px;
+    max-width: 500px;
 }
 
 .card-header .btn {
@@ -26,11 +36,15 @@
     padding: 0%;
 }
 
-.list-group-item .btn {
-    visibility: hidden;
-    /* padding: 0%; */
-}
-
 .list-group-item:hover {
     background-color: #e0ebeb;
+    cursor: pointer;
+}
+
+.taskTitle-formatting {
+    font-weight: bold;
+}
+
+.taskDesc-formatting {
+    margin-left: 10px;
 }

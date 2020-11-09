@@ -20,29 +20,33 @@ die();
     <body>
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-3">BoardView</h1>
+            <h1 class="display-4">BoardView</h1>
         </div>
     </div>
-  <!-- button to create newlist-->
-  <button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#createList">
-  Create List
-  </button>
 
-  <!-- button to delete list -->
-  <button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#deleteList">
-  Delete List
-  </button>
-
-  <!-- button to edit title of an existing list -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editList">
-  Edit List Title
-  </button>
-
-  <form action = "taskDetails.php" method = "Post"> 
-    <button type="submit" class="btn btn-primary">
-    Add new task
+  
+  <div class="editfeatures">
+    <!-- button to create newlist-->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
+    Create List
     </button>
-  </form>
+
+    <!-- button to delete list -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteList">
+    Delete List
+    </button>
+
+    <!-- button to edit title of an existing list -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editList">
+    Edit List Title
+    </button>
+
+    <form action = "taskDetails.php" method = "Post"> 
+      <button type="submit" class="btn btn-primary">
+      Add new task
+      </button>
+    </form>
+  </div>
 
 <?php
 require("conn.php"); 
@@ -117,6 +121,7 @@ foreach ($lists as $list){
     </div>
   </div>
 
+
 	<ul class='list-group list-group-flush'>
 	";
   
@@ -125,10 +130,12 @@ foreach ($lists as $list){
             $tasks = $stmt->fetchAll();
             foreach ($tasks as $task){
             	//This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
-            	echo "<li class='list-group-item' onclick='dynamicModal(".$task['taskID'].")' data-toggle='modal' data-target='#viewTask'>".$task['taskTitle'].": ".$task['description']."</li>";
+              echo "<li class='list-group-item' onclick='dynamicModal(".$task['taskID'].")' data-toggle='modal' data-target='#viewTask'>
+              <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
             }
     echo " 
     </ul>
+    
 	</div>
 	</div>";
 }
@@ -238,7 +245,7 @@ echo "</div>";
         </button>
       </div>
       <div class="modal-body" >
-        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:558px; height:700px;" src="sample.com"></iframe>
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe>
       </div>
     </div>
   </div>

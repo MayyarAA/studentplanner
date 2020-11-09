@@ -21,6 +21,16 @@
     z-index: 2;
 }
 
+.Log-watIAM {
+    display: flex;
+    padding: 10px 10px 10px 10px;
+}
+
+.Log-Pass {
+    display: flex;
+    padding: 10px 10px 10px 10px;
+}
+
 .form-signin input[type="WATIAM"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
@@ -33,9 +43,7 @@
     border-top-right-radius: 0;
 }
 
-.form-signin img {
-    display: inline-block;
-}
+.form-signin img {}
 
 .bd-placeholder-img {
     font-size: 1.125rem;
