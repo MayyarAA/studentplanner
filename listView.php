@@ -28,6 +28,11 @@ die();
   Create List
   </button>
 
+<!-- button to delete list -->
+<button type="button" class="btn btn-primary" style='margin-left: 100px;' data-toggle="modal" data-target="#deleteList">
+  Delete List
+  </button>
+
   <!-- button to edit title of an existing list -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editList">
   Edit List Title
@@ -81,6 +86,18 @@ if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
+}
+
+if (!empty($_POST['Delete_listID'])){
+	//If the user submitted a new delete list request we run this code
+	$query = " 
+            DELETE FROM taskList    // deleting list from the task list 
+            WHERE listID = :Delete_listID "; 
+        $query_params = array (
+          ':Delete_listID' => $_POST['Delete_listID'] //Delete list
+        );
+        $stmt = $db->prepare($query); 
+         $result = $stmt->execute($query_params); 
 }
 
 // get complete details for a list
@@ -137,7 +154,40 @@ echo "</div>";
     </div>
   </div>
 </div>
+<!--Below we have the code for our "modal" for the user to delete a list. this takes the list id and deletes that particular list -->
+<div class="modal fade" id="deleteList" tabindex="-1" aria-labelledby="deleteList" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">delete List</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-ListName" method="POST">
+          <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
+            <script>
+            $stmt = $db->prepare('SELECT * FROM taskList');
+            $stmt->execute();       
+            $lists = $stmt->fetchAll();
+            </script>
 
+            <select name="Delete_listID" class="form-control" required>
+            <option value="" disabled selected>Select List</option>
+            <?php foreach($lists as $list): ?>
+              <option value = "<?= $list['listID']; ?>"><?= $list['listTitle']; ?></option>
+            <?php endforeach; ?>
+            </select>
+
+            <br>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Delete List</Title></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!--Below we have the code for our "modal" for the user to modify the title of a list. The modal outputs a form that takes in the list's original title(from dropdown) and new title(from textbox) as input-->
 <div class="modal fade" id="editList" tabindex="-1" aria-labelledby="editList" aria-hidden="true">
   <div class="modal-dialog">
