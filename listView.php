@@ -73,16 +73,16 @@ if (!empty($_POST['name'])){
        	$result = $stmt->execute($query_params); 
 }
 
-if (!empty($_POST['old_name']) && !empty($_POST['new_name'])){
+if (!empty($_POST['old_ID']) && !empty($_POST['new_name'])){
 	//If the user requests to change the name of existing lists, this code is run - takes the old name, and new name, both strings as its input
 	$query = " 
             UPDATE taskList 
             SET listTitle = :new_name 
-            WHERE listTitle = :old_name
+            WHERE listID = :old_ID
         "; 
         $query_params = array( 
             ':new_name' => $_POST['new_name'], // set the new name of the list
-            ':old_name' => $_POST['old_name'] // parameter for old/existing list title
+            ':old_ID' => $_POST['old_ID'] // parameter for old/existing list title
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
@@ -207,10 +207,10 @@ echo "</div>";
             $lists = $stmt->fetchAll();
             ?>
 
-            <select name="old_name" class="form-control" required>
+            <select name="old_ID" class="form-control" required>
             <option value="" disabled selected>Select List</option>
             <?php foreach($lists as $list): ?>
-              <option value = "<?= $list['listTitle']; ?>"><?= $list['listTitle']; ?></option>
+              <option value = "<?= $list['listID']; ?>"><?= $list['listTitle']; ?></option>
             <?php endforeach; ?>
             </select>
 
