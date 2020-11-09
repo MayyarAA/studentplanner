@@ -247,7 +247,7 @@ echo "</div>";
         </button>
       </div>
       <div class="modal-body" >
-        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:558px; height:700px;" src="sample.com"></iframe>
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="viewTaskFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe>
       </div>
     </div>
   </div>

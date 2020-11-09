@@ -91,15 +91,16 @@
 
         <div>
             <form action="login.php" class="form-signin" method="post">
-
-                <img class="mb-4" src="imgs/Profile-Icon.jpg" alt="" width="35" height="35">
-                <label for="inputWATIAM" class="sr-only">WATIAM</label>
-                <input type="text" name="WATIAM" value="" class="form-control" placeholder="WATIAM" required/>
-
-                <img class="mb-4" src="imgs/Login-Key.jpg" alt="" width="35" height="35">
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Password" required/>
-
+                <div class="Log-watIAM">
+                    <img class="mb-4" src="imgs/Profile-Icon.jpg" alt="" width="35" height="35" style="margin-top: 5px; margin-right: 5px;">
+                    <label for="inputWATIAM" class="sr-only">WATIAM</label>
+                    <input type="text" name="WATIAM" value="" class="form-control" placeholder="WATIAM" required/>
+                </div>
+                <div class="Log-Pass">
+                    <img class="mb-4" src="imgs/Login-Key.jpg" alt="" width="35" height="35" style="margin-top: 5px; margin-right: 5px;">
+                    <label for="inputPassword" class="sr-only">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required/>
+                </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Log In</button>
                 <a href="Register.html">Register</a>
                 <p class="mt-5 mb-3 text-muted">&copy; MSCI 342, 2020</p>

@@ -38,6 +38,7 @@
 
 .list-group-item:hover {
     background-color: #e0ebeb;
+    cursor: pointer;
 }
 
 .taskTitle-formatting {
