@@ -31,12 +31,26 @@ $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
     <div class="jumbotron">
         <div class="container">
             <h2 class="display-5"><?php echo $board['boardTitle']; ?> Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']);?> by <?php echo $board['u.WATIAM']; ?> </h2>
+            <a class="btn btn-primary" href="selectBoard.php">Back</a>
         </div>
     </div>
-
-  
+<?php
+$stmt = $db->prepare('SELECT * FROM share WHERE `u.WATIAM` = ? AND `b.boardID` = ?');
+            $stmt->execute(array($_SESSION['user'],$_GET['board']));       
+            $share = $stmt->fetch();
+            $edit = false;
+            if ($share['permission'] == "edit"){
+              $edit = true;
+            }
+if ($edit){
+?>
   <div class="editfeatures">
     <!-- button to create newlist-->
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sharing">
+    Sharing
+    </button>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createList">
     Create List
     </button>
@@ -52,14 +66,14 @@ $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
     </button>
 
     <form action = "taskDetails.php" method = "Post"> 
+      <input type="hidden" name="newTaskBoard" value="<?php echo $_GET['board']; ?>">
       <button type="submit" class="btn btn-primary">
       Add new task
       </button>
     </form>
   </div>
-
 <?php
-
+}
 
 //If we have a delete task function posted lets process it.
 if (!empty($_POST['deleteID'])){
@@ -67,7 +81,28 @@ $stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
             $stmt->execute(array($_POST['deleteID']));       
             $task = $stmt->fetch();
 }
-
+//If the user updated a permission
+if (!empty($_POST['updateWATIAM'])){
+if ($_POST['updateTO'] == "remove"){
+  $stmt = $db->prepare('DELETE FROM share WHERE `u.WATIAM`=? AND `b.boardID`=?');
+              $stmt->execute(array($_POST['updateWATIAM'],$_POST['updateID']));       
+              $task = $stmt->fetch();
+  }
+  else{
+      $query = " 
+            UPDATE share 
+            SET permission = :permission 
+            WHERE `u.WATIAM` = :WATIAM AND `b.boardID` = :boardID
+        "; 
+        $query_params = array( 
+            ':permission' => $_POST['updateTO'],
+            ':WATIAM' => $_POST['updateWATIAM'],
+            ':boardID' => $_POST['updateID']
+        ); 
+        $stmt = $db->prepare($query); 
+        $result = $stmt->execute($query_params); 
+  }
+}
 //If the user submitted a new list request we run this code
 if (!empty($_POST['name'])){
 	//If the user submitted a new list request we run this code - the query takes the list title(String) and the board ID (integer) as its input
@@ -82,7 +117,7 @@ if (!empty($_POST['name'])){
         "; 
         $query_params = array( 
             ':listTitle' => $_POST['name'], //Insert the user's input into the database
-            ':boardID' => 1 //Placeholder until we develop the board view function
+            ':boardID' => $_GET['board'] 
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
@@ -187,8 +222,8 @@ echo "</div>";
         <form action="" class="edit-ListName" method="POST">
           <!-- Obtain the existing list titles, and display them in a dropdown list, so the user can choose the list they want to delete -->
             <script>
-            $stmt = $db->prepare('SELECT * FROM taskList');
-            $stmt->execute();       
+            $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID=?');
+            $stmt->execute(array($_GET['board']));       
             $lists = $stmt->fetchAll();
             </script>
 
@@ -221,8 +256,8 @@ echo "</div>";
         <form action="" class="edit-ListName" method="POST">
           <!-- Obtain the existing list title, and display them in a dropdown list, so the user can choose whichever one they want to change -->
             <?php
-            $stmt = $db->prepare('SELECT * FROM taskList');
-            $stmt->execute();       
+            $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID=?');
+            $stmt->execute(array($_GET['board']));       
             $lists = $stmt->fetchAll();
             ?>
 
@@ -260,12 +295,70 @@ echo "</div>";
     </div>
   </div>
 </div>
+
+<!--Below we have the code for our "sharing" module to modify sharing permissions -->
+<div class="modal fade" id="sharing" tabindex="-1" aria-labelledby="sharing" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sharing Settings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <!-- Obtain the shares tied to this board -->
+            <?php
+            $stmt = $db->prepare('SELECT * FROM share WHERE `b.boardID`=?');
+            $stmt->execute(array($_GET['board']));       
+            $shares = $stmt->fetchAll();
+            ?>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>User</th>
+                  <td>Current Permission</td>
+                  <td>Change Permission</td>
+                </tr>
+            <?php 
+            foreach ($shares as $share){
+            ?>
+            <tr>
+              <th scope="row"><?php echo $share['u.WATIAM']; ?></th>
+              <td><?php echo $share['permission']; ?></td>
+              <td>
+                <form action="" method="POST">
+                  <input type="hidden" name="updateWATIAM" value="<?php echo $share['u.WATIAM']; ?>">
+                  <input type="hidden" name="updateID" value="<?php echo $_GET['board']; ?>">
+                  <select name="updateTO">
+                    <option value="view">View</option>
+                    <option value="edit">Edit</option>
+                    <option value="remove">Remove</option>
+                  </select>
+                  <button type="submit" class="btn btn-info">Update</button>
+                </form>
+              </td>
+            </tr>
+
+            <?php
+            }
+            ?>
+                
+              </tbody>
+            </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
 
 // function to refresh the modal page for task details
 function dynamicModal(str)
 {
-$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/viewTask.php?id="+str);
+$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/wmmeyer/viewTask.php?id="+str);
 }
 </script>
 

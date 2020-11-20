@@ -18,7 +18,7 @@ if (!empty($_POST['boardIDshare'])){
 $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             $stmt->execute(array($_POST['deleteID']));       
             $deleteboard = $stmt->fetch();
-    $query = " 
+	$query = " 
             INSERT INTO share ( 
                 `b.boardID`, 
                 `u.WATIAM`,
@@ -35,7 +35,7 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             ':permission' => $_POST['permission']
         ); 
         $stmt = $db->prepare($query); 
-        $result = $stmt->execute($query_params); 
+       	$result = $stmt->execute($query_params); 
 }
 if (!empty($_POST['boardName'])){
 $query = " 
@@ -55,8 +55,8 @@ $query = "
             ':boardDateCreated' => time()
         ); 
         $stmt = $db->prepare($query); 
-        $result = $stmt->execute($query_params);
-        $id = $db->lastInsertId();
+       	$result = $stmt->execute($query_params);
+       	$id = $db->lastInsertId();
 
 $query = " 
             INSERT INTO share ( 
@@ -75,7 +75,7 @@ $query = "
             ':permission' => "edit"
         ); 
         $stmt = $db->prepare($query); 
-        $result = $stmt->execute($query_params);    
+       	$result = $stmt->execute($query_params);   	
 
 }
 ?>
@@ -111,37 +111,37 @@ $stmt = $db->prepare('SELECT * FROM share WHERE `u.WATIAM` = ? ORDER BY `b.board
             $stmt->execute(array($_SESSION['user']));       
             $shares = $stmt->fetchAll();
 foreach ($shares as $share){
-    $stmt = $db->prepare('SELECT * FROM board WHERE `boardID` = ? ORDER BY `boardID` DESC');
+	$stmt = $db->prepare('SELECT * FROM board WHERE `boardID` = ? ORDER BY `boardID` DESC');
             $stmt->execute(array($share['b.boardID']));       
             $board = $stmt->fetch();
 ?>
 <div class='col-xs-2'>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Board <?php echo $board['boardTitle']; ?></h5>
-        <h6 class="card-subtitle mb-2 text-muted"><?php echo $share['permission']; ?> access</h6>
-        <p class="card-text">Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']); ?> by <?php echo $board['u.WATIAM']; ?></p>
-        <div>   
-            <a href="listView.php?board=<?php echo $board['boardID']; ?>" class="btn btn-primary" style="display:inline-block;">View Board</a>
-            <?php if ($share['permission'] == "edit") {
-            ?>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
-            Share
-            </button>
-            <form action = "selectBoard.php" method = "POST" style="display:inline-block;"> 
-              <input type="hidden" name="deleteID" value="<?php echo $board['boardID']; ?>">
-              <button type="submit" class="btn btn-danger" style="display:inline-block;">
-              Delete Board
-              </button>
-            </form>
-            
-            <?php
-            }
-            ?>
-            
-        </div> 
-      </div>
-    </div>
+	<div class="card">
+	  <div class="card-body">
+	    <h5 class="card-title">Board: <?php echo $board['boardTitle']; ?></h5>
+	    <h6 class="card-subtitle mb-2 text-muted"><?php echo $share['permission']; ?> access</h6>
+	    <p class="card-text">Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']); ?> by <?php echo $board['u.WATIAM']; ?></p>
+		<div>   
+		    <a href="listView.php?board=<?php echo $board['boardID']; ?>" class="btn btn-primary" style="display:inline-block;">View Board</a>
+		    <?php if ($share['permission'] == "edit") {
+		   	?>
+		   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
+		    Share
+		    </button>
+		   	<form action = "selectBoard.php" method = "POST" style="display:inline-block;"> 
+		      <input type="hidden" name="deleteID" value="<?php echo $board['boardID']; ?>">
+		      <button type="submit" class="btn btn-danger" style="display:inline-block;">
+		      Delete Board
+		      </button>
+		    </form>
+		    
+		   	<?php
+		    }
+		    ?>
+		    
+		</div> 
+	  </div>
+	</div>
 </div>
 <div class="modal fade" id="shareBoard" tabindex="-1" aria-labelledby="shareBoard" aria-hidden="true">
   <div class="modal-dialog">
@@ -154,11 +154,11 @@ foreach ($shares as $share){
       </div>
       <div class="modal-body">
         <form action="" class="edit-ListName" method="POST">
-            <?php
-            $stmt = $db->prepare('SELECT * FROM user ORDER BY `WATIAM` ASC');
+        	<?php
+        	$stmt = $db->prepare('SELECT * FROM user ORDER BY `WATIAM` ASC');
             $stmt->execute();       
             $users = $stmt->fetchAll();
-            ?>
+        	?>
             <select name="user" class="form-control" required>
             <option value="" disabled selected>Select User</option>
             <?php foreach($users as $user): ?>

@@ -32,16 +32,21 @@
             <div class="col">
             <select name = "listID">
                 <?php
+
+                    $boardID = $_POST['newTaskBoard'];
                     require("conn.php"); 
-                    
-                    $query = "SELECT listID,listTitle FROM taskList";
-                    $taskLists = mysqli_query($conn, $query);
-                    while ($row = mysqli_fetch_array($taskLists)) {
-                        echo "<option value=" . $row['listID'] . ">" . $row['listTitle'] . "</option>"; 
-                    }
+                    $stmt = $db->prepare('SELECT listID,listTitle FROM taskList WHERE boardID=?');
+                        $stmt->execute(array($boardID));       
+                        $taskLists = $stmt->fetchAll();
+                        foreach ($taskLists as $taskList){
+                             echo "<option value=" . $taskList['listID'] . ">" . $taskList['listTitle'] . "</option>"; 
+                        }
                 ?> 
             </select>
             </div>
+      <input type="hidden" name="newTaskBoard" value="<?php echo $boardID; ?>">
+
+
         <div class="col">
             <label for="taskEffort"> Effort</label>
            <input style="height:50px;width:80px;font-size:14pt;"type="number" class="form-control" name="taskEffort">
@@ -50,12 +55,12 @@
 
         <div class="col">
             <label for="taskTypeWork"> Type of Work</label>
-           <input style="height:50px;width:160px;font-size:14pt;"type="number" class="form-control" name="taskTypeWork">
+           <input style="height:50px;width:160px;font-size:14pt;"type="text" class="form-control" name="taskTypeWork">
            <small id="" class="form-text text-muted">Detail of work type</small>
         </div>
         <div class="col">
             <label for="taskDateDue"> Due Date</label>
-            <input style="height:50px;width:150px;font-size:14pt;"type="number" class="form-control" name="taskDateDue">
+            <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" name="taskDueDate" id="taskDueDate">
             <small id="" class="form-text text-muted">Due date of task</small>
         </div>
     </div>
@@ -63,7 +68,7 @@
         <div class="form-group form-check">
 
         </div>
-        <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+        <button type="submit" class="btn btn-primary" name="submit" value="Submit">Submit</button>
     </form>
 
 
@@ -71,25 +76,58 @@
 </head>
 <?php
 //This file contains the php code for inserting tast detail data from the html form
-
-//declaring local php variables 
+if (!empty($_POST['submit'])){
+    //declaring local php variables 
 $submitted_taskName = $_POST['taskTitle'];
 $submitted_taskDetail = $_POST['tastDecrip'];
 $submitted_taskEffort = $_POST['taskEffort'];
 $submitted_taskDateDue= $_POST['taskDateDue'];
 $submitted_taskTypeWork= $_POST['taskTypeWork'];
 $submitted_taskListAssigned = $_POST['listID'];
+$submitted_courseID = $_POST['courseID'];
 
 //imports the objects and valiues from conn
-require("conn.php"); 
-$sql = "INSERT INTO `task` (`taskID`, `taskTitle`, `description`, `dueDate`, `taskDateCreated`, `importance`, `typeOfWork`, `c.courseID`, `tl.listID`, `archived`) 
-        VALUES (null, '$submitted_taskName', '$submitted_taskDetail', $submitted_taskDateDue , '10', $submitted_taskEffort, '$submitted_taskTypeWork', '111', $submitted_taskListAssigned , '1');";
-//executes the post call
-$result = mysqli_query($conn, $sql);
-
+    $query = " 
+            INSERT INTO task ( 
+                taskTitle, 
+                description,
+                dueDate,
+                taskDateCreated,
+                importance,
+                typeOfWork,
+                `c.courseID`,
+                `tl.listID`,
+                archived
+            ) VALUES ( 
+                :taskTitle, 
+                :description,
+                :dueDate,
+                :taskDateCreated,
+                :importance,
+                :typeOfWork,
+                :courseID,
+                :listID,
+                :archived
+            ) 
+        "; 
+        $query_params = array( 
+            ':taskTitle' => $submitted_taskName, 
+            ':description' => $submitted_taskDetail, 
+            ':dueDate' => strtotime($_POST['taskDueDate']),
+            ':taskDateCreated' => time(),
+            ':importance' => $submitted_taskEffort,
+            ':typeOfWork' => $submitted_taskTypeWork,
+            ':courseID' => 111,
+            ':listID' => $submitted_taskListAssigned,
+            ':archived' => 0
+        );    
+        $stmt = $db->prepare($query); 
+        $result = $stmt->execute($query_params); 
 if ($result) {
-    header("Location: listView.php");
+    header("Location: listView.php?board=".$boardID);
 }
+}
+
 ?>
 
 
