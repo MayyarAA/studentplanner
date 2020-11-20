@@ -358,7 +358,7 @@ echo "</div>";
 // function to refresh the modal page for task details
 function dynamicModal(str)
 {
-$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/wmmeyer/viewTask.php?id="+str);
+$("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/viewTask.php?id="+str);
 }
 </script>
 
