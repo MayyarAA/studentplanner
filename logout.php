@@ -4,5 +4,5 @@
      
     unset($_SESSION['user']); 
      
-    header("Location: login.php"); 
-    die("Redirecting to: login.php");
+    header("Location: index.html"); 
+    die("Redirecting to: index.html");
