@@ -1,10 +1,20 @@
 <?php
+//Force the user to login if they aren't
+session_start();
+if(empty($_SESSION['user'])) 
+    { 
+        header("Location: index.html"); 
+        die("Redirecting to index.html"); 
+    } 
 //This is a workaround, where the page loads too fast before the delete function happen so we need to re-load after the fact.
 if ($_GET['r'] == t){
 header("Location: listView.php");
 die();
 }
-
+require("conn.php"); 
+$stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
+            $stmt->execute(array($_GET['board']));       
+            $board = $stmt->fetch();
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -20,7 +30,7 @@ die();
     <body>
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-4">BoardView</h1>
+            <h2 class="display-5"><?php echo $board['boardTitle']; ?> Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']);?> by <?php echo $board['u.WATIAM']; ?> </h2>
         </div>
     </div>
 
@@ -49,7 +59,7 @@ die();
   </div>
 
 <?php
-require("conn.php"); 
+
 
 //If we have a delete task function posted lets process it.
 if (!empty($_POST['deleteID'])){
@@ -106,8 +116,8 @@ if (!empty($_POST['Delete_listID'])){
 }
 
 // get complete details for a list
-$stmt = $db->prepare('SELECT * FROM taskList ORDER BY `listID` ASC');
-            $stmt->execute();       
+$stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
+            $stmt->execute(array($_GET['board']));       
             $lists = $stmt->fetchAll();
 echo "<div class='row'>";
 foreach ($lists as $list){

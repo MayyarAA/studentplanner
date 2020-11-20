@@ -46,8 +46,8 @@
         { 
 
             unset($row['passwordHash']);  //Take out the password hash from the returned row variable, we don't need this to be in the session.
-            $_SESSION['user'] = $row; //Now put all variablse (except our password hash) into the php session so the rest of the website can use it.
-            header("Location: listView.php");   //Redirect the user to the index.php page
+            $_SESSION['user'] = $row['WATIAM']; //Now put all variablse (except our password hash) into the php session so the rest of the website can use it.
+            header("Location: selectBoard.php");   //Redirect the user to board view page
         } 
         else 
         { 

@@ -80,6 +80,7 @@
         } 
 
      //Redirect to index if successful
+
 	        header("Location: index.html"); 
 
     } 
