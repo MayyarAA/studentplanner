@@ -1,9 +1,27 @@
+<?php
+session_start();
+?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <table class="table">
   <tbody>
   <?php
   //This document is the modal popup for viewtask, we needed to have the individual page which uses GET to know which task it needs to retrieve. It is viewed in an iframe in listView
  require('conn.php');
+ $stmt = $db->prepare('
+  SELECT tl.boardID FROM task t
+INNER JOIN taskList tl
+ON t.`tl.listID` = tl.listID
+WHERE `taskID`=?
+  ');
+            $stmt->execute(array($_GET['id']));       
+            $board = $stmt->fetch();
+ $stmt = $db->prepare('SELECT * FROM share WHERE `u.WATIAM` = ? AND `b.boardID` = ?');
+            $stmt->execute(array($_SESSION['user'],$board['boardID']));       
+            $share = $stmt->fetch();
+            $edit = false;
+            if ($share['permission'] == "edit"){
+              $edit = true;
+            }
 if (!empty($_POST['update'])) {
 //User has submitted an update to task details
   $stmt = $db->prepare('UPDATE task SET taskTitle=?, description=?, importance=?,typeOfWork=?,`c.courseID`=?, `tl.listID`=? WHERE taskID=?');
@@ -38,43 +56,43 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
     <tr>
       <th>ID</th>
       <td><?php echo $task['taskID'];?></td>
-      <td>Modify Values and Submit Below</td>
+      <?php if ($edit) { ?><td>Modify Values and Submit Below</td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Title</th>
       <td><?php echo $task['taskTitle'];?></td>
-      <td><input type="text" class="form-control" name="taskTitleUpdate" value="<?php echo $task['taskTitle']; ?>"></td>
+      <?php if ($edit) { ?><td><input type="text" class="form-control" name="taskTitleUpdate" value="<?php echo $task['taskTitle']; ?>"></td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Description</th>
       <td><?php echo $task['taskDescription'];?></td>
-      <td><input type="text" class="form-control" name="descriptionUpdate" value="<?php echo $task['taskDescription']; ?>"></td>
+      <?php if ($edit) { ?><td><input type="text" class="form-control" name="descriptionUpdate" value="<?php echo $task['taskDescription']; ?>"></td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Due Date</th>
       <td><?php echo date("Y-m-d H:i:s", $task['dueDate']);?></td>
-      <td><input class="form-control" type="datetime-local" value="unchanged" name="updateDueDate" id="updateDueDate"></td>
+      <?php if ($edit) { ?><td><input class="form-control" type="datetime-local" value="unchanged" name="updateDueDate" id="updateDueDate"></td><?php } ?>
     
     </tr>
     <tr>
       <th scope="row">Date Created</th>
       <td><?php echo date("Y-m-d H:i:s", $task['taskDateCreated']);?></td>
-      <td>Cannot Modify Date Created</td>
+      <?php if ($edit) { ?><td>Cannot Modify Date Created</td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Importance</th>
       <td><?php echo $task['importance'];?></td>
-      <td><input type="text" class="form-control" name="importanceUpdate" value="<?php echo $task['importance']; ?>"></td>
+      <?php if ($edit) { ?><td><input type="text" class="form-control" name="importanceUpdate" value="<?php echo $task['importance']; ?>"></td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Type Of Work</th>
       <td><?php echo $task['typeOfWork'];?></td>
-      <td><input type="text" class="form-control" name="typeOfWorkUpdate" value="<?php echo $task['typeOfWork']; ?>"></td>
+      <?php if ($edit) { ?><td><input type="text" class="form-control" name="typeOfWorkUpdate" value="<?php echo $task['typeOfWork']; ?>"></td><?php } ?>
     </tr>
     <tr>
       <th scope="row">Course</th>
       <td><?php echo $task['courseTitle'];?></td>
-      <td><select name = "updateCourseID">
+      <?php if ($edit) { ?><td><select name = "updateCourseID">
             <option value="<?php echo $task['courseID']; ?>"><?php echo $task['courseTitle']; ?></option>
                 <?php                    
                     $query = "SELECT courseID,courseTitle FROM course";
@@ -83,12 +101,12 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
                         echo "<option value=" . $row['courseID'] . ">" . $row['courseTitle'] . "</option>"; 
                     }
                 ?> 
-      </select></td>
+      </select></td><?php } ?>
     </tr>
     <tr>
       <th scope="row">List</th>
       <td><?php echo $task['listTitle'];?></td>
-      <td><select name = "updateListID">
+      <?php if ($edit) { ?><td><select name = "updateListID">
             <option value="<?php echo $task['listID']; ?>"><?php echo $task['listTitle']; ?></option>
                 <?php                    
                     $query = "SELECT listID,listTitle FROM taskList";
@@ -97,16 +115,16 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
                         echo "<option value=" . $row['listID'] . ">" . $row['listTitle'] . "</option>"; 
                     }
                 ?> 
-      </select></td>
+      </select></td><?php } ?>
     </tr>
 
   </tbody>
 </table>
     <input type="hidden" id="updateID" name="updateID" value="<?php echo $_GET['id']; ?>">
-    <input type="submit" class="btn btn-warning" name="update" value="Update Task Details" style="position:absolute; right:10px;"></input>
+    <?php if ($edit) { ?><input type="submit" class="btn btn-warning" name="update" value="Update Task Details" style="position:absolute; right:10px;"></input><?php } ?>
   </form>
 
 <form action="listView.php" onclick="window.top.location = 'https://mansci-db.uwaterloo.ca/~wmmeyer/listView.php?r=t'" class="form-newList" method="POST">
  <input type="hidden" id="deleteID" name="deleteID" value="<?php echo $_GET['id']; ?>">
-<input type="submit" class="btn btn-danger" name="delete" value="Delete Task"></input>
+<?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="delete" value="Delete Task"></input><?php } ?>
 </form>
