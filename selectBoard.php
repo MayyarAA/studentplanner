@@ -123,7 +123,18 @@ foreach ($shares as $share){
 	    <p class="card-text">Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']); ?> by <?php echo $board['u.WATIAM']; ?></p>
 		<div>   
 		    <a href="listView.php?board=<?php echo $board['boardID']; ?>" class="btn btn-primary" style="display:inline-block;">View Board</a>
-		    <?php if ($share['permission'] == "edit") {
+        
+        <?php if ($board['boardTitle']=="Archived") {
+		   	?>
+		   	<form action = "selectBoard.php" method = "POST" style="display:inline-block;"> 
+		      <input type="hidden" name="deleteID" value="<?php echo $board['boardID']; ?>">
+		    </form>
+		    
+		   	<?php
+		    }
+		    ?>
+        
+        <?php if ($share['permission'] == "edit" && $board['boardTitle']!="Archived") {
 		   	?>
 		   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
 		    Share
