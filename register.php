@@ -90,86 +90,9 @@ function console_log($output, $with_script_tags = true) {
             die("Failed to run query. Insert user" ); 
         } 
 
-        $query = " 
-            INSERT INTO board ( 
-                `boardTitle`,
-                `u.WATIAM`,
-                `boardDateCreated`
-            ) VALUES ( 
-                :boardTitle,
-                :WATIAM,
-                :boardDateCreated
-            ) 
-        "; 
-
-        $Archived = 'Archived';
-        $query_params = array( 
-            ':boardTitle'=> $Archived,
-            ':WATIAM' => $_POST['WATIAM'], 
-            ':boardDateCreated' => time()
-        ); 
-
-        try 
-        { 
-            $stmt = $db->prepare($query); 
-            $result = $stmt->execute($query_params); 
-            $id = $db->lastInsertId();
-        } 
-        catch(PDOException $ex) 
-        { 
-            die("Failed to run query. Archived Board Initialization"); 
-        } 
-
-        // $query = "
-        //     SELECT boardID FROM board
-        //     WHERE u.WATIAM=:WATIAM AND boardTitle=:Archived
-        // "; 
-
-        // $query_params = array( 
-        //     ':WATIAM' => $_POST['WATIAM'], 
-        //     ':boardTitle'=> $Archived
-        // ); 
-
-        // try 
-        // { 
-        //     $stmt = $db->prepare($query); 
-        //     $ArchivedID = $stmt->execute($query_params); 
-        // } 
-        // catch(PDOException $ex) 
-        // { 
-        //     die("Failed to run query. ArchivedID "); 
-        // } 
-
-        $query = " 
-            INSERT INTO taskList( 
-                `listTitle`,
-                `boardID`
-            ) VALUES (
-                :listTitle,
-                :boardID
-            )
-        "; 
-
-        $Title = 'Archived List';
-        $query_params = array( 
-            ':listTitle' => $Title, 
-            ':boardID' => $id
-        ); 
-
-        try 
-        { 
-            $stmt = $db->prepare($query); 
-            $result = $stmt->execute($query_params); 
-        } 
-        catch(PDOException $ex) 
-        { 
-            die("Failed to run query. Archived Board Initialization"); 
-        } 
-
             //Redirect to index if successful
 
                 header("Location: index.html"); 
 
         } 
-
 ?> 

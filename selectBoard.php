@@ -96,14 +96,10 @@ $query = "
         </div>
 </div>
 
-
-    <!-- button to create board -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
-    Create Board
-    </button>
-
-
-    
+  <!-- button to create board -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
+  Create Board
+  </button>
 
 <div class="row">
 <?php
@@ -124,17 +120,7 @@ foreach ($shares as $share){
 		<div>   
 		    <a href="listView.php?board=<?php echo $board['boardID']; ?>" class="btn btn-primary" style="display:inline-block;">View Board</a>
         
-        <?php if ($board['boardTitle']=="Archived") {
-		   	?>
-		   	<form action = "selectBoard.php" method = "POST" style="display:inline-block;"> 
-		      <input type="hidden" name="deleteID" value="<?php echo $board['boardID']; ?>">
-		    </form>
-		    
-		   	<?php
-		    }
-		    ?>
-        
-        <?php if ($share['permission'] == "edit" && $board['boardTitle']!="Archived") {
+        <?php if ($share['permission'] == "edit") {
 		   	?>
 		   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
 		    Share
@@ -214,7 +200,6 @@ foreach ($shares as $share){
     </div>
   </div>
 </div>
-
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
