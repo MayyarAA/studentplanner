@@ -17,6 +17,10 @@
     max-width: 500px;
 }
 
+.card:hover {
+    cursor: pointer;
+}
+
 .card-header .btn {
     visibility: hidden;
 }
