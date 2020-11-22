@@ -17,16 +17,13 @@
     max-width: 500px;
 }
 
-.card:hover {
-    cursor: pointer;
-}
-
 .card-header .btn {
     visibility: hidden;
 }
 
 .card-header:hover {
     background-color: #669999;
+    cursor: pointer;
 }
 
 .card-header:hover .btn {
