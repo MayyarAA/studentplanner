@@ -9,10 +9,10 @@ if(empty($_SESSION['user']))
 //This is a workaround, where the page loads too fast before the delete function happen so we need to re-load after the fact.
 require("conn.php"); 
 
-// $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
-//             $stmt->execute(array($_GET['board']));       
-//             $board = $stmt->fetch();
-// ?>
+$stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
+            $stmt->execute(array($_GET['board']));       
+            $board = $stmt->fetch();
+?>
 
 <!DOCTYPE html>
 <html lang="">
@@ -29,7 +29,7 @@ require("conn.php");
     <div class="jumbotron">
         <div class="container">
             <h2 class="display-5"><?php echo $board['boardTitle']; ?> Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']);?> by <?php echo $board['u.WATIAM']; ?> </h2>
-            <a class="btn btn-primary" href="listView.php">Back</a>
+            <a class="btn btn-primary" href="listView.php?board=<?php echo $board['boardID']; ?>">Back</a>
         </div>
     </div>
 <?php
