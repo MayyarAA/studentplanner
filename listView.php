@@ -71,6 +71,12 @@ if ($edit){
       Add new task
       </button>
     </form>
+
+    <form action="ArchivedPage.php" method='Post'>
+      <button type="submit" class="btn btn-danger" style="display:inline-block;">
+		  View Archived
+      </button>
+    </form>
   </div>
 <?php
 }
