@@ -124,7 +124,10 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
     <?php if ($edit) { ?><input type="submit" class="btn btn-warning" name="update" value="Update Task Details" style="position:absolute; right:10px;"></input><?php } ?>
   </form>
 
-<form action="listView.php" onclick="window.top.location = 'https://mansci-db.uwaterloo.ca/~wmmeyer/listView.php?r=t'" class="form-newList" method="POST">
+<form action="deleteTask.php" onclick="window.top.location = 'https://mansci-db.uwaterloo.ca/~wmmeyer/listView.php?r=t'" class="form-newList" method="POST">
  <input type="hidden" id="deleteID" name="deleteID" value="<?php echo $_GET['id']; ?>">
-<?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="delete" value="Delete Task"></input><?php } ?>
+ <input type="hidden" id="deleteID" name="deleteID" value="<?php echo $board['boardID']; ?>"> 
+<?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="delete" value="Archive Task"></input><?php } ?>
 </form>
+
+
