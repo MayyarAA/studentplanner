@@ -65,6 +65,11 @@ if ($edit){
     Edit List Title
     </button>
 
+    <!-- button to edit title of an existing list -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTask">
+    Add new task
+    </button>
+
     <form action = "taskDetails.php" method = "Post"> 
       <input type="hidden" name="newTaskBoard" value="<?php echo $_GET['board']; ?>">
       <button type="submit" class="btn btn-primary">
@@ -150,6 +155,50 @@ if (!empty($_POST['Delete_listID'])){
          $result = $stmt->execute($query_params); 
 }
 
+if (!empty($_POST['addListID']) && !empty($_POST['addTaskTitle'])){
+  // If user submits new task parameters - run this query to add a new task
+  
+  $query = " 
+          INSERT INTO task ( 
+              TaskTitle, 
+              description,
+              dueDate,
+              taskDateCreated,
+              importance,
+              typeOfWork,
+              `c.courseID`,
+              `tl.listID`,
+              archived
+          ) VALUES ( 
+              :TaskTitle, 
+              :description,
+              :dueDate,
+              :taskDateCreated,
+              :importance,
+              :typeOfWork,
+              :courseID,
+              :listID,
+              :archived
+          ) 
+      "; 
+      $query_params = array( 
+          ':TaskTitle' => $_POST['addTaskTitle'], 
+          ':description' => $_POST['addTaskDetail'], 
+          ':dueDate' => strtotime($_POST['addTaskDueDate']),
+          ':taskDateCreated' => time(),
+          ':importance' => $_POST['addTaskEffort'],
+          ':typeOfWork' => $_POST['addTaskTypeWork'],
+          ':courseID' => 111,
+          ':listID' => $_POST['addListID'],
+          ':archived' => 0
+      );    
+      $stmt = $db->prepare($query); 
+      $result = $stmt->execute($query_params);
+      if ($result) {
+        header("Location: listView.php?board=".$_GET['board']);
+      } 
+}
+
 // get complete details for a list
 $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
             $stmt->execute(array($_GET['board']));       
@@ -176,7 +225,7 @@ foreach ($lists as $list){
             foreach ($tasks as $task){
             	//This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
               echo "<li class='list-group-item' onclick='dynamicModal(".$task['taskID'].")' data-toggle='modal' data-target='#viewTask'>
-              <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
+              <div class='addTaskTitle-formatting'>".$task['addTaskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
             }
     echo " 
     </ul>
@@ -351,6 +400,68 @@ echo "</div>";
   </div>
 </div>
 
+<!--Below we have the code for our "modal" for the user to add a new task. The modal outputs a form that takes in various user parameters to add a task into a task list-->
+<div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="addTask" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="addTask" method="POST">
+            <div class="form-group">
+                <label for="Task Title">Task Title</label>
+                <input style="height:50px;width:400px;font-size:20pt;" type="text" class="form-control" name="addTaskTitle" aria-describedby="emailHelp">
+                <small id="taskHelp" class="form-text text-muted">Give your task a descriptive title</small>
+            </div>
+            <div class="form-group">
+                <label for="taskDescription">Task Description</label>
+                <textarea style="height:150px;width:400px;font-size:14pt;"class="form-control" id="exampleFormControlTextarea1" rows="3" name="addTaskDetail"></textarea>
+                <small id="" class="form-text text-muted">Add a description with information regarding your task</small>
+            </div>
+            <!-- Retrieve existing list of task lists and display in a dropdown list for a user to select to add a task into-->
+            <div>
+            <label for="addListID"> Choose Task List</label>
+              <br>
+              <select name = "addListID">
+                  <option value="" disabled selected>Select Task List</option>
+                  <?php
+                      require("conn.php"); 
+                      $stmt = $db->prepare('SELECT listID,listTitle FROM taskList WHERE boardID=?');
+                          $stmt->execute(array($_GET['board']));       
+                          $taskLists = $stmt->fetchAll();
+                          foreach ($taskLists as $taskList){
+                              echo "<option value=" . $taskList['listID'] . ">" . $taskList['listTitle'] . "</option>"; 
+                          }
+                  ?> 
+              </select>
+            </div>
+            <div>
+              <label for="addTaskEffort"> Effort</label>
+              <input style="height:50px;width:80px;font-size:14pt;"type="number" class="form-control" name="addTaskEffort">
+              <small id="" class="form-text text-muted">Amount of work required</small>
+            </div>
+            <div>
+              <label for="addTaskTypeWork"> Type of Work</label>
+              <input style="height:50px;width:160px;font-size:14pt;"type="text" class="form-control" name="addTaskTypeWork">
+              <small id="" class="form-text text-muted">Detail of work type</small>
+            </div>
+            <div>
+                <label for="addTaskDateDue"> Due Date</label>
+                <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" name="addTaskDueDate" id="addTaskDueDate">
+                <small id="" class="form-text text-muted">Due date of task</small>
+            </div>
+            <br>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" name="addTaskSubmit" value="">Add task</Title></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script>
