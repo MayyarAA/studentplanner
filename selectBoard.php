@@ -83,33 +83,17 @@ $query = "
           INSERT INTO taskList ( 
               listTitle, 
               boardID
-          ) VALUES ( 
-              :listTitle, 
-              :boardID
-          ) 
-          "; 
-        $query_params = array( 
-          ':listTitle' => 'todo',
+          ) VALUES 
+            ('TO-DO',:boardID),('DONE',:boardID)
+           
+          "
+          ; 
+        $query_params = array(
           ':boardID' => $id
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params);    	
-
-$query = " 
-         INSERT INTO taskList ( 
-             listTitle, 
-             boardID
-         ) VALUES ( 
-             :listTitle, 
-             :boardID
-         ) 
-         "; 
-       $query_params = array( 
-         ':listTitle' => 'done',
-         ':boardID' => $id
-       ); 
-       $stmt = $db->prepare($query); 
-        $result = $stmt->execute($query_params); 
+ 
 }
 ?>
 <!DOCTYPE html>
