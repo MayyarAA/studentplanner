@@ -157,6 +157,7 @@ $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID`
 echo "<div class='row'>";
 foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
+  //Each list name can be clicked to access the filtering functionality(UX needs to be improved a little)
 	echo "
 	<div class='col-xs-3'>
 	<div class='card'>
@@ -377,7 +378,7 @@ echo "</div>";
 function dynamicModal(str)
 {
 $("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/viewTask.php?id="+str);
-$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/filterList.php?id="+str);
+$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/filterList.php?id="+str); //this link will need to change once deployed
 }
 </script>
 
