@@ -214,7 +214,7 @@ foreach ($lists as $list){
 	<ul class='list-group list-group-flush'>
 	";
   
-	$stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ?');
+	$stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ? and archived = 0');
             $stmt->execute(array($list['listID']));       
             $tasks = $stmt->fetchAll();
             foreach ($tasks as $task){
@@ -338,8 +338,8 @@ echo "</div>";
       <div class="modal-body">
           <!-- Obtain the shares tied to this board -->
             <?php
-            $stmt = $db->prepare('SELECT * FROM share WHERE `b.boardID`=?');
-            $stmt->execute(array($_GET['board']));       
+            $stmt = $db->prepare('SELECT * FROM share WHERE `b.boardID`=? AND `u.WATIAM` != ?');
+            $stmt->execute(array($_GET['board'], $_SESSION['user']));       
             $shares = $stmt->fetchAll();
             ?>
             <table class="table">
