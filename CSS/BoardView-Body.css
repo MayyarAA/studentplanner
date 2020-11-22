@@ -23,7 +23,6 @@
 
 .card-header:hover {
     background-color: #669999;
-    cursor: pointer;
 }
 
 .card-header:hover .btn {
@@ -35,6 +34,10 @@
 .card-Title button {
     float: right;
     padding: 0%;
+}
+
+.card-Title:hover {
+    cursor: pointer;
 }
 
 .list-group-item:hover {
