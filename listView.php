@@ -69,13 +69,6 @@ if ($edit){
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTask">
     Add new task
     </button>
-
-    <form action = "taskDetails.php" method = "Post"> 
-      <input type="hidden" name="newTaskBoard" value="<?php echo $_GET['board']; ?>">
-      <button type="submit" class="btn btn-primary">
-      Add new task
-      </button>
-    </form>
   </div>
 <?php
 }
