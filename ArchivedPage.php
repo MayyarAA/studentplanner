@@ -32,7 +32,35 @@ $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
             <a class="btn btn-primary" href="listView.php?board=<?php echo $board['boardID']; ?>">Back</a>
         </div>
     </div>
+    
 <?php
+
+if (!empty($_POST['Delete'])){
+$stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
+            $stmt->execute(array($_POST['DeleteID']));       
+            $task = $stmt->fetch();
+}
+
+if (!empty($_POST['UnArchiveID'])){
+  $query = " 
+  UPDATE task  SET archived=0 where taskID = :taskID;
+        "; 
+        // taskID parameter from user form 
+        $query_params = array( 
+            ':taskID' => $_POST['UnArchiveID'] 
+        ); 
+         
+        try 
+        { 
+            $stmt = $db->prepare($query); 
+            $result = $stmt->execute($query_params);
+        } 
+        catch(PDOException $ex) 
+        { 
+            die("Failed to run query: UnArchive task");
+            
+        } 
+}
 
 // get complete details for a list
 $query = " 
@@ -87,6 +115,8 @@ foreach ($lists as $list){
             $tasks = $stmt->fetchAll();
             foreach ($tasks as $task){
 ?>
+
+
 <div class="modal fade" id="viewTask<?php echo $task['taskID']; ?>" tabindex="-1" aria-labelledby="viewTask" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="width:578px;">
@@ -194,13 +224,13 @@ foreach ($lists as $list){
 
           </tbody>
         </table>
-            <!-- <input type="hidden" id="updateID" name="updateID" value="<?php echo $task['taskID']; ?>">
-            <?php if ($edit) { ?><input type="submit" class="btn btn-warning" name="update" value="Update Task Details" style="position:absolute; right:10px;"></input><?php } ?> -->
-          </form>
+            </form>
 
-        <form action="listView.php?board=<?php echo $board['boardID']; ?>" class="form-newList" method="POST">
+        <form action="ArchivedPage.php?board=<?php echo $board['boardID']; ?>" class="form-newList" method="POST">
          <input type="hidden" id="DeleteID" name="DeleteID" value="<?php echo $task['taskID']; ?>">
-        <?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="Delete" value="Delete Task"></input><?php } ?>
+         <input type="hidden" id="UnArchiveID" name="UnArchiveID" value="<?php echo $task['taskID']; ?>">
+        <?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="Delete" value="Delete Task"></input>
+            <input type="submit" class="btn btn-danger" name="UnArchive" value="UnArchive Task"></input><?php } ?>
         </form>
       </div>
     </div>

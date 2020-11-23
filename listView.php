@@ -84,7 +84,7 @@ if ($edit){
 //User has requested to archive a task
 if (!empty($_POST['Archive'])){
   $query = " 
-  UPDATE task  SET archived= 1 where taskID = :taskID;
+    UPDATE task  SET archived= 1 where taskID = :taskID;
         "; 
         // taskID parameter from user form 
         $query_params = array( 
@@ -99,9 +99,9 @@ if (!empty($_POST['Archive'])){
         catch(PDOException $ex) 
         { 
             die("Failed to run query: Archive task");
-            
         } 
 }
+
 //If we have a update task function posted lets process it.
 if (!empty($_POST['update'])) {
         //User has submitted an update to task details
@@ -124,13 +124,15 @@ if (!empty($_POST['update'])) {
                     ));
                     }
         }
-        //If we have a delete task function posted lets process it.
 
-if (!empty($_POST['deleteID'])){
-$stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
-            $stmt->execute(array($_POST['deleteID']));       
-            $task = $stmt->fetch();
-}
+// NOTE: No longer require this delete task function. It is moved to ArchivedPage.php        
+//If we have a delete task function posted lets process it.
+// if (!empty($_POST['deleteID'])){
+// $stmt = $db->prepare('DELETE FROM task WHERE `taskID`=?');
+//             $stmt->execute(array($_POST['deleteID']));       
+//             $task = $stmt->fetch();
+// }
+
 //If the user updated a permission
 if (!empty($_POST['updateWATIAM'])){
 if ($_POST['updateTO'] == "remove"){
@@ -412,7 +414,7 @@ foreach ($lists as $list){
         <table class="table">
           <tbody>
           <?php
-          //This document is the modal popup for viewtask, we needed to have the individual page which uses GET to know which task it needs to retrieve. It is viewed in an iframe in listView
+          //This document is the modal popup for viewtask, we needed to have the individual page which uses GET to know which task it needs to retrieve.
          $stmt = $db->prepare('
           SELECT tl.boardID FROM task t
         INNER JOIN taskList tl
@@ -520,7 +522,7 @@ foreach ($lists as $list){
 </div>
 
 <?php
-            }
+  }
 }
 ?>
 
