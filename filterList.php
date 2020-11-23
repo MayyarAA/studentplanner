@@ -106,7 +106,7 @@ if(!empty($_POST['filter'])) {
             <option value="ascTitle">Ascending</option>
             <option value="descTitle">Descending</option>
         </optgroup>
-        <optgroup label="Sort by important">
+        <optgroup label="Sort by importance">
             <option value="ascEffort">Ascending</option>
             <option value="descEffort">Descending</option>
         </optgroup>
@@ -114,7 +114,7 @@ if(!empty($_POST['filter'])) {
             <option value="ascType">Ascending</option>
             <option value="descType">Descending</option>
         </optgroup>
-        <optgroup label="Sort by date">
+        <optgroup label="Sort by due-date">
             <option value="ascDate">Ascending</option>
             <option value="descDate">Descending</option>
         </optgroup>
