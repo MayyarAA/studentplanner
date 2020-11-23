@@ -124,12 +124,6 @@ ON t.`tl.listID` = tl.listID WHERE `taskID`=?');
     <?php if ($edit) { ?><input type="submit" class="btn btn-warning" name="update" value="Update Task Details" style="position:absolute; right:10px;"></input><?php } ?>
   </form>
 
-  <?php
-  if (!empty($_POST['Archive'])) {
-
-  }
-
-  ?>
 <form action="listView.php?board=<?php echo $board['boardID']; ?>" class="form-newList" method="POST">
  <input type="hidden" id="deleteID" name="ArchiveID" value="<?php echo $board['boardID']; ?>">
 <?php if ($edit) { ?><input type="submit" class="btn btn-danger" name="Archive" value="Archive Task"></input><?php } ?>

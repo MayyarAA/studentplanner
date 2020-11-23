@@ -200,6 +200,50 @@ if (!empty($_POST['Delete_listID'])){
          $result = $stmt->execute($query_params); 
 }
 
+if (!empty($_POST['addListID']) && !empty($_POST['addTaskTitle'])){
+  // If user submits new task parameters - run this query to add a new task
+  
+  $query = " 
+          INSERT INTO task ( 
+              TaskTitle, 
+              description,
+              dueDate,
+              taskDateCreated,
+              importance,
+              typeOfWork,
+              `c.courseID`,
+              `tl.listID`,
+              archived
+          ) VALUES ( 
+              :TaskTitle, 
+              :description,
+              :dueDate,
+              :taskDateCreated,
+              :importance,
+              :typeOfWork,
+              :courseID,
+              :listID,
+              :archived
+          ) 
+      "; 
+      $query_params = array( 
+          ':TaskTitle' => $_POST['addTaskTitle'], 
+          ':description' => $_POST['addTaskDetail'], 
+          ':dueDate' => strtotime($_POST['addTaskDueDate']),
+          ':taskDateCreated' => time(),
+          ':importance' => $_POST['addTaskEffort'],
+          ':typeOfWork' => $_POST['addTaskTypeWork'],
+          ':courseID' => 111,
+          ':listID' => $_POST['addListID'],
+          ':archived' => 0
+      );    
+      $stmt = $db->prepare($query); 
+      $result = $stmt->execute($query_params);
+      if ($result) {
+        header("Location: listView.php?board=".$_GET['board']);
+      } 
+}
+
 // get complete details for a list
 $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
             $stmt->execute(array($_GET['board']));       
@@ -207,11 +251,12 @@ $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID`
 echo "<div class='row'>";
 foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
+  //Each list name can be clicked to access the filtering functionality(UX needs to be improved a little)
 	echo "
 	<div class='col-xs-3'>
 	<div class='card'>
 	<div class='card-header'>
-    <div class ='card-Title'>
+    <div class ='card-Title' onclick='dynamicModal(".$list['listID'].")' data-toggle='modal' data-target='#filterList'>
       ".$list['listTitle']."  
     </div>
   </div>
@@ -329,7 +374,23 @@ echo "</div>";
   </div>
 </div>
 
-
+<!-- Modal to filter lists - upon clicking this, the user can filter the tasks in their lists based on properties such as task title, importance, type of work, and due date -->
+<!-- The tasks(title and description) will be displayed within the modal itself, this can change in later iterations-->
+<div class="modal fade" id="filterList" tabindex="-1" aria-labelledby="filterList" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:578px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Filter View</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--Below we have the code for our "sharing" module to modify sharing permissions -->
 <div class="modal fade" id="sharing" tabindex="-1" aria-labelledby="sharing" aria-hidden="true">
@@ -386,6 +447,69 @@ echo "</div>";
   </div>
 </div>
 
+<!--Below we have the code for our "modal" for the user to add a new task. The modal outputs a form that takes in various user parameters to add a task into a task list-->
+<div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="addTask" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="addTask" method="POST">
+            <div class="form-group">
+                <label for="Task Title">Task Title (Required)</label>
+                <input style="height:50px;width:400px;font-size:20pt;" type="text" class="form-control" name="addTaskTitle" required aria-required="true" maxlength="255">
+                <small id="taskHelp" class="form-text text-muted">Give your task a descriptive title</small>
+            </div>
+            <div class="form-group">
+                <label for="taskDescription">Task Description</label>
+                <textarea style="height:150px;width:400px;font-size:14pt;"class="form-control" id="exampleFormControlTextarea1" rows="3" 
+                name="addTaskDetail" required aria-required="true" maxlength="255"></textarea>
+                <small id="" class="form-text text-muted">Add a description with information regarding your task</small>
+            </div>
+            <!-- Retrieve existing list of task lists and display in a dropdown list for a user to select to add a task into-->
+            <div>
+            <label for="addListID"> Choose Task List (Required)</label>
+              <br>
+              <select name = "addListID">
+                  <option value="" disabled selected>Select Task List</option>
+                  <?php
+                      require("conn.php"); 
+                      $stmt = $db->prepare('SELECT listID,listTitle FROM taskList WHERE boardID=?');
+                          $stmt->execute(array($_GET['board']));       
+                          $taskLists = $stmt->fetchAll();
+                          foreach ($taskLists as $taskList){
+                              echo "<option value=" . $taskList['listID'] . ">" . $taskList['listTitle'] . "</option>"; 
+                          }
+                  ?> 
+              </select>
+            </div>
+            <div>
+              <label for="addTaskEffort"> Effort</label>
+              <input style="height:50px;width:80px;font-size:14pt;"type="number" class="form-control" name="addTaskEffort" min = "0" max = "10" step="1">
+              <small id="" class="form-text text-muted">Amount of work required</small>
+            </div>
+            <div>
+              <label for="addTaskTypeWork"> Type of Work</label>
+              <input style="height:50px;width:160px;font-size:14pt;"type="text" class="form-control" name="addTaskTypeWork" maxlength="255">
+              <small id="" class="form-text text-muted">Detail of work type</small>
+            </div>
+            <div>
+                <label for="addTaskDateDue"> Due Date</label>
+                <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" name="addTaskDueDate" id="addTaskDueDate">
+                <small id="" class="form-text text-muted">Due date of task</small>
+            </div>
+            <br>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" name="addTaskSubmit" value="">Add task</Title></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!--Below we have the code for our "modal" which pops up when the user clicks a task. The modal outputs all the details of the task-->
@@ -523,6 +647,14 @@ foreach ($lists as $list){
   }
 }
 ?>
+
+<script>
+// function to refresh the modal page for task details and filtering task
+function dynamicModal(str)
+{
+$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/filterList.php?id="+str); //this link will need to change once deployed
+}
+</script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

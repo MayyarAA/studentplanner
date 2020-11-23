@@ -36,6 +36,10 @@
     padding: 0%;
 }
 
+.card-Title:hover {
+    cursor: pointer;
+}
+
 .list-group-item:hover {
     background-color: #e0ebeb;
     cursor: pointer;
