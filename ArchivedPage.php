@@ -165,17 +165,17 @@ foreach ($lists as $list){
             <tr>
               <th scope="row">Title</th>
               <td><?php echo $task['taskTitle'];?></td>
-              <?php if ($edit) { ?><td><input type="text" class="form-control" name="taskTitleUpdate" value="<?php echo $task['taskTitle']; ?>"></td><?php } ?>
+              <?php if ($edit) { ?><td><input disabled type="text" class="form-control" name="taskTitleUpdate" value="<?php echo $task['taskTitle']; ?>"></td><?php } ?>
             </tr>
             <tr>
               <th scope="row">Description</th>
               <td><?php echo $task['taskDescription'];?></td>
-              <?php if ($edit) { ?><td><input type="text" class="form-control" name="descriptionUpdate" value="<?php echo $task['taskDescription']; ?>"></td><?php } ?>
+              <?php if ($edit) { ?><td><input disabled type="text" class="form-control" name="descriptionUpdate" value="<?php echo $task['taskDescription']; ?>"></td><?php } ?>
             </tr>
             <tr>
               <th scope="row">Due Date</th>
               <td><?php echo date("Y-m-d H:i:s", $task['dueDate']);?></td>
-              <?php if ($edit) { ?><td><input class="form-control" type="datetime-local" value="unchanged" name="updateDueDate" id="updateDueDate"></td><?php } ?>
+              <?php if ($edit) { ?><td><input disabled class="form-control" type="datetime-local" value="unchanged" name="updateDueDate" id="updateDueDate"></td><?php } ?>
             
             </tr>
             <tr>
@@ -186,17 +186,17 @@ foreach ($lists as $list){
             <tr>
               <th scope="row">Importance</th>
               <td><?php echo $task['importance'];?></td>
-              <?php if ($edit) { ?><td><input type="text" class="form-control" name="importanceUpdate" value="<?php echo $task['importance']; ?>"></td><?php } ?>
+              <?php if ($edit) { ?><td><input disabled type="text" class="form-control" name="importanceUpdate" value="<?php echo $task['importance']; ?>"></td><?php } ?>
             </tr>
             <tr>
               <th scope="row">Type Of Work</th>
               <td><?php echo $task['typeOfWork'];?></td>
-              <?php if ($edit) { ?><td><input type="text" class="form-control" name="typeOfWorkUpdate" value="<?php echo $task['typeOfWork']; ?>"></td><?php } ?>
+              <?php if ($edit) { ?><td><input disabled type="text" class="form-control" name="typeOfWorkUpdate" value="<?php echo $task['typeOfWork']; ?>"></td><?php } ?>
             </tr>
             <tr>
               <th scope="row">Course</th>
               <td><?php echo $task['courseTitle'];?></td>
-              <?php if ($edit) { ?><td><select name = "updateCourseID">
+              <?php if ($edit) { ?><td><select disabled name = "updateCourseID">
                     <option value="<?php echo $task['courseID']; ?>"><?php echo $task['courseTitle']; ?></option>
                         <?php                    
                             $query = "SELECT courseID,courseTitle FROM course";
@@ -210,7 +210,7 @@ foreach ($lists as $list){
             <tr>
               <th scope="row">List</th>
               <td><?php echo $task['listTitle'];?></td>
-              <?php if ($edit) { ?><td><select name = "updateListID">
+              <?php if ($edit) { ?><td><select disabled name = "updateListID">
                     <option value="<?php echo $task['listID']; ?>"><?php echo $task['listTitle']; ?></option>
                         <?php                    
                             $query = "SELECT listID,listTitle FROM taskList";
