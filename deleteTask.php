@@ -4,10 +4,7 @@
 require("conn.php"); //Use the conn.php file to connect to the database 
 session_start();
 $query = " 
-            DELETE
-            FROM task 
-            WHERE 
-                taskID = :taskID;
+UPDATE task  SET archived= 1 where taskID = :taskID;
         "; 
         // taskID parameter from user form 
         $query_params = array( 
@@ -18,11 +15,11 @@ $query = "
         { 
             $stmt = $db->prepare($query); 
             $result = $stmt->execute($query_params);
-            header("Location: boardView.html"); 
+            header("Location: Listview.php?board=".$_POST['boardID']); 
         } 
         catch(PDOException $ex) 
         { 
-            die("Failed to run query: Delete task");
+            die("Failed to run query: Archive task");
             
         } 
 ?>
