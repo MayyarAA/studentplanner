@@ -95,12 +95,12 @@ $query = "
             <a href="logout.php" class="btn btn-warning">Logout</a>
         </div>
 </div>
-
+<div class="editfeatures">
   <!-- button to create board -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
   Create Board
   </button>
-
+</div>
 <div class="row">
 <?php
 $stmt = $db->prepare('SELECT * FROM share WHERE `u.WATIAM` = ? ORDER BY `b.boardID` DESC');
