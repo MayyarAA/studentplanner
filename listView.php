@@ -69,6 +69,13 @@ if ($edit){
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTask">
     Add new task
     </button>
+    
+    <form action="ArchivedPage.php" method='Post'>
+      <button type="submit" class="btn btn-danger" style="display:inline-block;">
+		  View Archived
+      </button>
+    </form>
+    
   </div>
 <?php
 }
@@ -199,11 +206,12 @@ $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID`
 echo "<div class='row'>";
 foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
+  //Each list name can be clicked to access the filtering functionality(UX needs to be improved a little)
 	echo "
 	<div class='col-xs-3'>
 	<div class='card'>
 	<div class='card-header'>
-    <div class ='card-Title'>
+    <div class ='card-Title' onclick='dynamicModal(".$list['listID'].")' data-toggle='modal' data-target='#filterList'>
       ".$list['listTitle']."  
     </div>
   </div>
@@ -316,6 +324,24 @@ echo "</div>";
             <br>
             <button class="btn btn-lg btn-primary btn-block" type="submit" value="Register">Update Title</Title></button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to filter lists - upon clicking this, the user can filter the tasks in their lists based on properties such as task title, importance, type of work, and due date -->
+<!-- The tasks(title and description) will be displayed within the modal itself, this can change in later iterations-->
+<div class="modal fade" id="filterList" tabindex="-1" aria-labelledby="filterList" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:578px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Filter View</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe>
       </div>
     </div>
   </div>
@@ -460,10 +486,11 @@ echo "</div>";
 
 <script>
 
-// function to refresh the modal page for task details
+// function to refresh the modal page for task details and filtering task
 function dynamicModal(str)
 {
 $("#viewTaskFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/viewTask.php?id="+str);
+$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/filterList.php?id="+str); //this link will need to change once deployed
 }
 </script>
 

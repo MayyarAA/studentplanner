@@ -37,6 +37,7 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
 }
+
 if (!empty($_POST['boardName'])){
 $query = " 
             INSERT INTO board ( 
@@ -56,8 +57,8 @@ $query = "
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params);
-       	$id = $db->lastInsertId();
-
+        $id = $db->lastInsertId();
+         
 $query = " 
             INSERT INTO share ( 
                 `b.boardID`,
@@ -77,6 +78,22 @@ $query = "
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params);   	
 
+
+$query = " 
+          INSERT INTO taskList ( 
+              listTitle, 
+              boardID
+          ) VALUES 
+            ('TO-DO',:boardID),('DONE',:boardID)
+           
+          "
+          ; 
+        $query_params = array(
+          ':boardID' => $id
+        ); 
+        $stmt = $db->prepare($query); 
+       	$result = $stmt->execute($query_params);    	
+ 
 }
 ?>
 <!DOCTYPE html>
@@ -96,14 +113,10 @@ $query = "
         </div>
 </div>
 
-
-    <!-- button to create board -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
-    Create Board
-    </button>
-
-
-    
+  <!-- button to create board -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
+  Create Board
+  </button>
 
 <div class="row">
 <?php
@@ -123,7 +136,8 @@ foreach ($shares as $share){
 	    <p class="card-text">Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']); ?> by <?php echo $board['u.WATIAM']; ?></p>
 		<div>   
 		    <a href="listView.php?board=<?php echo $board['boardID']; ?>" class="btn btn-primary" style="display:inline-block;">View Board</a>
-		    <?php if ($share['permission'] == "edit") {
+        
+        <?php if ($share['permission'] == "edit") {
 		   	?>
 		   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
 		    Share
@@ -203,7 +217,6 @@ foreach ($shares as $share){
     </div>
   </div>
 </div>
-
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
