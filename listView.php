@@ -65,7 +65,7 @@ if ($edit){
     Edit List Title
     </button>
 
-    <!-- button to edit title of an existing list -->
+    <!-- button to add a task into an existing list -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTask">
     Add new task
     </button>
@@ -413,18 +413,19 @@ echo "</div>";
       <div class="modal-body">
         <form action="" class="addTask" method="POST">
             <div class="form-group">
-                <label for="Task Title">Task Title</label>
-                <input style="height:50px;width:400px;font-size:20pt;" type="text" class="form-control" name="addTaskTitle" aria-describedby="emailHelp">
+                <label for="Task Title">Task Title (Required)</label>
+                <input style="height:50px;width:400px;font-size:20pt;" type="text" class="form-control" name="addTaskTitle" required aria-required="true" maxlength="255">
                 <small id="taskHelp" class="form-text text-muted">Give your task a descriptive title</small>
             </div>
             <div class="form-group">
                 <label for="taskDescription">Task Description</label>
-                <textarea style="height:150px;width:400px;font-size:14pt;"class="form-control" id="exampleFormControlTextarea1" rows="3" name="addTaskDetail"></textarea>
+                <textarea style="height:150px;width:400px;font-size:14pt;"class="form-control" id="exampleFormControlTextarea1" rows="3" 
+                name="addTaskDetail" required aria-required="true" maxlength="255"></textarea>
                 <small id="" class="form-text text-muted">Add a description with information regarding your task</small>
             </div>
             <!-- Retrieve existing list of task lists and display in a dropdown list for a user to select to add a task into-->
             <div>
-            <label for="addListID"> Choose Task List</label>
+            <label for="addListID"> Choose Task List (Required)</label>
               <br>
               <select name = "addListID">
                   <option value="" disabled selected>Select Task List</option>
@@ -441,12 +442,12 @@ echo "</div>";
             </div>
             <div>
               <label for="addTaskEffort"> Effort</label>
-              <input style="height:50px;width:80px;font-size:14pt;"type="number" class="form-control" name="addTaskEffort">
+              <input style="height:50px;width:80px;font-size:14pt;"type="number" class="form-control" name="addTaskEffort" min = "0" max = "10" step="1">
               <small id="" class="form-text text-muted">Amount of work required</small>
             </div>
             <div>
               <label for="addTaskTypeWork"> Type of Work</label>
-              <input style="height:50px;width:160px;font-size:14pt;"type="text" class="form-control" name="addTaskTypeWork">
+              <input style="height:50px;width:160px;font-size:14pt;"type="text" class="form-control" name="addTaskTypeWork" maxlength="255">
               <small id="" class="form-text text-muted">Detail of work type</small>
             </div>
             <div>
