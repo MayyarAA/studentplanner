@@ -37,6 +37,7 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params); 
 }
+
 if (!empty($_POST['boardName'])){
 $query = " 
             INSERT INTO board ( 
@@ -56,8 +57,8 @@ $query = "
         ); 
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params);
-       	$id = $db->lastInsertId();
-
+        $id = $db->lastInsertId();
+         
 $query = " 
             INSERT INTO share ( 
                 `b.boardID`,
@@ -77,6 +78,22 @@ $query = "
         $stmt = $db->prepare($query); 
        	$result = $stmt->execute($query_params);   	
 
+
+$query = " 
+          INSERT INTO taskList ( 
+              listTitle, 
+              boardID
+          ) VALUES 
+            ('TO-DO',:boardID),('DONE',:boardID)
+           
+          "
+          ; 
+        $query_params = array(
+          ':boardID' => $id
+        ); 
+        $stmt = $db->prepare($query); 
+       	$result = $stmt->execute($query_params);    	
+ 
 }
 ?>
 <!DOCTYPE html>
