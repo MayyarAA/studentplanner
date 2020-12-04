@@ -244,6 +244,7 @@ if (!empty($_POST['addListID']) && !empty($_POST['addTaskTitle'])){
       } 
 }
 
+
 // get complete details for a list
 $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
             $stmt->execute(array($_GET['board']));       
@@ -256,23 +257,87 @@ foreach ($lists as $list){
 	<div class='col-xs-3'>
 	<div class='card'>
 	<div class='card-header'>
-    <div class ='card-Title' onclick='dynamicModal(".$list['listID'].")' data-toggle='modal' data-target='#filterList'>
+    <div class ='card-Title' data-toggle='modal' data-target='#filterList".$list['listID']."'>
       ".$list['listTitle']."  
     </div>
   </div>
 
 
 	<ul class='list-group list-group-flush'>
-	";
+  ";
+  if ($list['listID'] == $_POST['filterListID']) {
+    if (!empty($_POST["filter"])) {
+      // get user inputs for properties
+      $by_name = $_POST['filt_name'];
+      $by_effort = $_POST['filt_effort'];
+      $by_work = $_POST['filt_work'];
+      $by_date = strtotime($_POST['filt_date']);
+      $sort_cond = $_POST['sortTask'];
   
-	$stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ? and archived = 0');
-            $stmt->execute(array($list['listID']));       
-            $tasks = $stmt->fetchAll();
-            foreach ($tasks as $task){
-            	//This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
-              echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
-              <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
-            }
+      // build initial query
+      $query = "SELECT * FROM task WHERE task.`tl.listID` = ".$list['listID']."";
+      
+      // extend query based on user input filters
+      if(! empty($by_name)) {
+          $query .= " AND `taskTitle`='".$by_name."' ";
+      }
+      if(! empty($by_effort)) {
+        $query .= " AND `importance`='".$by_effort."' ";
+      }
+      if(! empty($by_work)) {
+        $query .= " AND `typeOfWork`='".$by_work."' ";
+      }
+      if(! empty($by_date)) {
+          $query .= " AND `dueDate`='".$by_date."' ";
+      }
+          
+      //extend query based on user sort parameters
+      if (! empty($sort_cond)) {
+          if ($sort_cond == 'ascTitle') {
+              $query .= " ORDER BY taskTitle ASC";
+          }
+          if ($sort_cond == 'descTitle') {
+              $query .= " ORDER BY taskTitle DESC";
+          }
+          if ($sort_cond == 'ascEffort') {
+              $query .= " ORDER BY importance ASC";
+          }
+          if ($sort_cond == 'descEffort') {
+              $query .= " ORDER BY importance DESC";
+          }
+          if ($sort_cond == 'ascType') {
+              $query .= " ORDER BY typeOfWork ASC";
+          }
+          if ($sort_cond == 'descType') {
+              $query .= " ORDER BY typeOfWork DESC";
+          }
+          if ($sort_cond == 'ascDate') {
+              $query .= " ORDER BY dueDate ASC";
+          }
+          if ($sort_cond == 'descDate') {
+              $query .= " ORDER BY dueDate DESC";
+          }
+      }
+  
+      $stmt = $db->prepare($query);
+      $stmt->execute(array($list['listID']));       
+      $tasks = $stmt->fetchAll();
+    } else { 
+      $stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ? and archived = 0');
+      $stmt->execute(array($list['listID']));       
+      $tasks = $stmt->fetchAll();
+    }
+  } else { 
+    $stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ? and archived = 0');
+    $stmt->execute(array($list['listID']));       
+    $tasks = $stmt->fetchAll();
+  }
+
+    foreach ($tasks as $task){
+      //This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
+      echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
+      <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
+    }
     echo " 
     </ul>
     
@@ -376,54 +441,66 @@ echo "</div>";
 
 <!-- Modal to filter lists - upon clicking this, the user can filter the tasks in their lists based on properties such as task title, importance, type of work, and due date -->
 <!-- The tasks(title and description) will be displayed within the modal itself, this can change in later iterations-->
-<div class="modal fade" id="filterList" tabindex="-1" aria-labelledby="filterList" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" style="width:578px;">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Filter View</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" >
-        <!-- <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe> -->
-        <form action="listView.php?board=<?php echo $board['boardID'] ; ?>" method="POST"> 
-            <br>
-            <input type="text" name="filt_name" value="" class="form-control" placeholder="Task Title" maxlength="255"/>
-            <br>
-            <input type="number" name="filt_effort" value="" class="form-control" placeholder="Importance" min = "0" max = "10" step="1"/>
-            <br>
-            <input type="text" name="filt_work" value="" class="form-control" placeholder="Type of Work" maxlength="255"/>
-            <br>
-            <input type="datetime-local" name="filt_date" value="unchanged" class="form-control" placeholder="Due Date"/>
-            <br>
-            <select name="sortTask">
-                <option value="" disabled selected>Sort Task By</option>
-                <optgroup label="Sort by Title">
-                    <option value="ascTitle">Ascending</option>
-                    <option value="descTitle">Descending</option>
-                </optgroup>
-                <optgroup label="Sort by importance">
-                    <option value="ascEffort">Ascending</option>
-                    <option value="descEffort">Descending</option>
-                </optgroup>
-                <optgroup label="Sort by work type">
-                    <option value="ascType">Ascending</option>
-                    <option value="descType">Descending</option>
-                </optgroup>
-                <optgroup label="Sort by due-date">
-                    <option value="ascDate">Ascending</option>
-                    <option value="descDate">Descending</option>
-                </optgroup>
-            </select> 
-            <br><br>
-            <input type="submit" class="btn btn-warning" name="filter" value="Filter List">
-        </form>  
+
+<!-- SQL query to fetch listID and run a forloop to generate modals for each task list on a board -->
+<?php
+$stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
+            $stmt->execute(array($_GET['board']));       
+            $lists = $stmt->fetchAll();
+foreach ($lists as $list) {
+
+?>
+  <div class="modal fade" id="filterList<?php echo $list['listID']; ?>" tabindex="-1" aria-labelledby="filterList" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width:578px;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Filter View</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" >
+          <!-- <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe> -->
+          <form action="listView.php?board=<?php echo $board['boardID']; ?>" method="POST"> 
+              <input type="hidden" name="filterListID" value="<?php echo $list['listID']; ?>"> 
+              <br>
+              <input type="text" name="filt_name" value="" class="form-control" placeholder="Task Title" maxlength="255"/>
+              <br>
+              <input type="number" name="filt_effort" value="" class="form-control" placeholder="Importance" min = "0" max = "10" step="1"/>
+              <br>
+              <input type="text" name="filt_work" value="" class="form-control" placeholder="Type of Work" maxlength="255"/>
+              <br>
+              <input type="datetime-local" name="filt_date" value="unchanged" class="form-control" placeholder="Due Date"/>
+              <br>
+              <select name="sortTask">
+                  <option value="" disabled selected>Sort Task By</option>
+                  <optgroup label="Sort by Title">
+                      <option value="ascTitle">Ascending</option>
+                      <option value="descTitle">Descending</option>
+                  </optgroup>
+                  <optgroup label="Sort by importance">
+                      <option value="ascEffort">Ascending</option>
+                      <option value="descEffort">Descending</option>
+                  </optgroup>
+                  <optgroup label="Sort by work type">
+                      <option value="ascType">Ascending</option>
+                      <option value="descType">Descending</option>
+                  </optgroup>
+                  <optgroup label="Sort by due-date">
+                      <option value="ascDate">Ascending</option>
+                      <option value="descDate">Descending</option>
+                  </optgroup>
+              </select> 
+              <br><br>
+              <input type="submit" class="btn btn-warning" name="filter" value="Filter List">
+          </form>  
+        </div>
       </div>
     </div>
   </div>
-</div>
-
+  <?php
+}
+?>
 <!--Below we have the code for our "sharing" module to modify sharing permissions -->
 <div class="modal fade" id="sharing" tabindex="-1" aria-labelledby="sharing" aria-hidden="true">
   <div class="modal-dialog">
@@ -680,13 +757,6 @@ foreach ($lists as $list){
 }
 ?>
 
-<script>
-// function to refresh the modal page for task details and filtering task
-function dynamicModal(str)
-{
-$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/filterList.php?id="+str); //this link will need to change once deployed
-}
-</script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
