@@ -386,7 +386,39 @@ echo "</div>";
         </button>
       </div>
       <div class="modal-body" >
-        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe>
+        <!-- <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe> -->
+        <form action="listView.php?board=<?php echo $board['boardID'] ; ?>" method="POST"> 
+            <br>
+            <input type="text" name="filt_name" value="" class="form-control" placeholder="Task Title" maxlength="255"/>
+            <br>
+            <input type="number" name="filt_effort" value="" class="form-control" placeholder="Importance" min = "0" max = "10" step="1"/>
+            <br>
+            <input type="text" name="filt_work" value="" class="form-control" placeholder="Type of Work" maxlength="255"/>
+            <br>
+            <input type="datetime-local" name="filt_date" value="unchanged" class="form-control" placeholder="Due Date"/>
+            <br>
+            <select name="sortTask">
+                <option value="" disabled selected>Sort Task By</option>
+                <optgroup label="Sort by Title">
+                    <option value="ascTitle">Ascending</option>
+                    <option value="descTitle">Descending</option>
+                </optgroup>
+                <optgroup label="Sort by importance">
+                    <option value="ascEffort">Ascending</option>
+                    <option value="descEffort">Descending</option>
+                </optgroup>
+                <optgroup label="Sort by work type">
+                    <option value="ascType">Ascending</option>
+                    <option value="descType">Descending</option>
+                </optgroup>
+                <optgroup label="Sort by due-date">
+                    <option value="ascDate">Ascending</option>
+                    <option value="descDate">Descending</option>
+                </optgroup>
+            </select> 
+            <br><br>
+            <input type="submit" class="btn btn-warning" name="filter" value="Filter List">
+        </form>  
       </div>
     </div>
   </div>
@@ -652,7 +684,7 @@ foreach ($lists as $list){
 // function to refresh the modal page for task details and filtering task
 function dynamicModal(str)
 {
-$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/filterList.php?id="+str); //this link will need to change once deployed
+$("#filterListFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/filterList.php?id="+str); //this link will need to change once deployed
 }
 </script>
 
