@@ -7,6 +7,7 @@ if(empty($_SESSION['user']))
         die("Redirecting to index.html"); 
     } 
 require("conn.php");
+
 //If we have a deleteID request we must delete the board by ID
 if (!empty($_POST['deleteID'])){
 $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
@@ -14,6 +15,8 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             $deleteboard = $stmt->fetch();
 
 }
+
+// sharing an existing board
 if (!empty($_POST['boardIDshare'])){
 $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             $stmt->execute(array($_POST['deleteID']));       
@@ -38,6 +41,7 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
        	$result = $stmt->execute($query_params); 
 }
 
+// creating a new board
 if (!empty($_POST['boardName'])){
 $query = " 
             INSERT INTO board ( 
@@ -181,6 +185,7 @@ foreach ($shares as $share){
             </select>
             <br>
             <select name="permission" class="form-control" required>
+            <option value="" disabled selected>Permission</option>
             <option value="edit">Edit</option>
             <option value="view">View</option>
             </select>
