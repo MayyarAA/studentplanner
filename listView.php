@@ -6,11 +6,7 @@ if(empty($_SESSION['user']))
         header("Location: index.html"); 
         die("Redirecting to index.html"); 
     } 
-//This is a workaround, where the page loads too fast before the delete function happen so we need to re-load after the fact.
-if ($_GET['r'] == t){
-header("Location: listView.php");
-die();
-}
+
 require("conn.php"); 
 $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
             $stmt->execute(array($_GET['board']));       
@@ -257,10 +253,17 @@ foreach ($lists as $list){
     <div class='col-xs-3'>
     <div class='card'>
     <div class='card-header'>
-      <div class ='card-Title' data-toggle='modal' data-target='#filterList".$list['listID']."'>
+      <div class ='card-Title' data-toggle='modal' style='display:inline-block;' data-target='#filterList".$list['listID']."'>
         ".$list['listTitle']."  
       </div>
+    <form action = 'listView.php?board=".$_GET['board']."' method = 'POST' style='display:inline-block;''> 
+		      <input type='hidden' name='Delete_listID' value=".$list['listID'].">
+		      <button type='submit' class='btn btn-danger' style='display:inline-block; visibility:visible;'>
+		      Delete
+		      </button>
+	</form>  
     </div>
+    
     <div class='scroll'>
       <ul class='list-group list-group-flush'>
   ";
@@ -337,7 +340,15 @@ foreach ($lists as $list){
   foreach ($tasks as $task){
     //This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
     echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
-    <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
+    <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div>
+		<form action = 'listView.php?board=".$_GET['board']."' method = 'POST' style='display:inline-block;'> 
+			      <input type='hidden' name='Archive' value=".$task['taskID'].">
+			      <input type='hidden' name='ArchiveID' value=".$task['taskID'].">
+			      <button type='submit' class='btn btn-danger' style='display:inline-block;''>
+			      Archive
+			      </button>
+		</form>
+    </li>";
   }
   echo " 
   </ul> 
