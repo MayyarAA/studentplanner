@@ -7,6 +7,7 @@ if(empty($_SESSION['user']))
         die("Redirecting to index.html"); 
     } 
 require("conn.php");
+
 //If we have a deleteID request we must delete the board by ID
 if (!empty($_POST['deleteID'])){
 $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
@@ -14,6 +15,8 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             $deleteboard = $stmt->fetch();
 
 }
+
+// sharing an existing board
 if (!empty($_POST['boardIDshare'])){
 $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
             $stmt->execute(array($_POST['deleteID']));       
@@ -38,6 +41,7 @@ $stmt = $db->prepare('DELETE FROM board WHERE boardID=?');
        	$result = $stmt->execute($query_params); 
 }
 
+// creating a new board
 if (!empty($_POST['boardName'])){
 $query = " 
             INSERT INTO board ( 
@@ -113,11 +117,13 @@ $query = "
         </div>
 </div>
 <div class="editfeatures">
+
   <!-- button to create board -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBoard">
   Create Board
   </button>
 </div>
+
 <div class="row">
 <?php
 $stmt = $db->prepare('SELECT * FROM share WHERE `u.WATIAM` = ? ORDER BY `b.boardID` DESC');
@@ -141,6 +147,9 @@ foreach ($shares as $share){
 		   	?>
 		   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#shareBoard">
 		    Share
+		    </button>
+        <button type="button" class="btn btn-info" onclick="dynamicModal(<?php echo $board['boardID']; ?>)" data-toggle="modal" data-target="#shareBoardCourse">
+		    Share using course
 		    </button>
 		   	<form action = "selectBoard.php" method = "POST" style="display:inline-block;"> 
 		      <input type="hidden" name="deleteID" value="<?php echo $board['boardID']; ?>">
@@ -181,6 +190,7 @@ foreach ($shares as $share){
             </select>
             <br>
             <select name="permission" class="form-control" required>
+            <option value="" disabled selected>Permission</option>
             <option value="edit">Edit</option>
             <option value="view">View</option>
             </select>
@@ -193,6 +203,23 @@ foreach ($shares as $share){
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="shareBoardCourse" tabindex="-1" aria-labelledby="shareBoardCourse" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Share Board using Course</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="shareBoardFrame" style="border:0; width:450px; height:700px;" src="shareBoardCourse.php"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php           
 }
 ?>
@@ -218,6 +245,12 @@ foreach ($shares as $share){
   </div>
 </div>
 
+<script>
+function dynamicModal(str)
+{
+$("#shareBoardFrame").attr("src", "https://mansci-db.uwaterloo.ca/~wmmeyer/dev_gaurav/shareBoardCourse.php?id="+str); //this link will need to change once deployed
+}
+</script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
