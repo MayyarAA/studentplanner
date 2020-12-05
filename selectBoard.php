@@ -129,7 +129,7 @@ foreach ($shares as $share){
             $board = $stmt->fetch();
 ?>
 <div class='col-xs-2'>
-	<div class="card">
+	<div class="BoardCard">
 	  <div class="card-body">
 	    <h5 class="card-title">Board: <?php echo $board['boardTitle']; ?></h5>
 	    <h6 class="card-subtitle mb-2 text-muted"><?php echo $share['permission']; ?> access</h6>

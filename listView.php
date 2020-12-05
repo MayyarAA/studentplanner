@@ -261,7 +261,8 @@ foreach ($lists as $list){
         ".$list['listTitle']."  
       </div>
     </div>
-    <ul class='list-group list-group-flush'>
+    <div class='scroll'>
+      <ul class='list-group list-group-flush'>
   ";
   // Check if filter/sort feature was selected by user and build a filtered query based on user inputs
   if ($list['listID'] == $_POST['filterListID']) {
@@ -339,7 +340,8 @@ foreach ($lists as $list){
     <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
   }
   echo " 
-  </ul>
+  </ul> 
+  </div>
 	</div>
 	</div>";
 }
