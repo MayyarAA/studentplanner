@@ -90,7 +90,6 @@ if(!empty($_POST['filter'])) {
 
 <!-- Form to take in user inputs -->
 <form action="filterList.php?id=<?php echo $_GET['id']; ?>" method="POST"> 
-
     <br>
     <input type="text" name="filt_name" value="" class="form-control" placeholder="Task Title" maxlength="255"/>
     <br>
