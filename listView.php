@@ -6,11 +6,7 @@ if(empty($_SESSION['user']))
         header("Location: index.html"); 
         die("Redirecting to index.html"); 
     } 
-//This is a workaround, where the page loads too fast before the delete function happen so we need to re-load after the fact.
-if ($_GET['r'] == t){
-header("Location: listView.php");
-die();
-}
+
 require("conn.php"); 
 $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
             $stmt->execute(array($_GET['board']));       
@@ -249,6 +245,18 @@ if (!empty($_POST['addListID']) && !empty($_POST['addTaskTitle'])){
 $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
             $stmt->execute(array($_GET['board']));       
             $lists = $stmt->fetchAll();
+if ($stmt->rowCount() == 0) {
+  //There is no lists, show the user an "empty board" message
+?>
+<div class="row">
+	<div class="jumbotron">
+		  <h1 class="display-4">Empty Board</h1>
+		  <p class="lead">The board you have selected is empty. Click "Create List" to get started</p>
+	</div>
+</div>
+<?php
+} else {
+   
 echo "<div class='row'>";
 foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
@@ -257,10 +265,17 @@ foreach ($lists as $list){
     <div class='col-xs-3'>
     <div class='card'>
     <div class='card-header'>
-      <div class ='card-Title' data-toggle='modal' data-target='#filterList".$list['listID']."'>
+      <div class ='card-Title' data-toggle='modal' style='display:inline-block;' data-target='#filterList".$list['listID']."'>
         ".$list['listTitle']."  
       </div>
+    <form action = 'listView.php?board=".$_GET['board']."' method = 'POST' style='display:inline-block;''> 
+		      <input type='hidden' name='Delete_listID' value=".$list['listID'].">
+		      <button type='submit' class='btn btn-danger' style='display:inline-block; visibility:visible;'>
+		      Delete
+		      </button>
+	</form>  
     </div>
+    
     <div class='scroll'>
       <ul class='list-group list-group-flush'>
   ";
@@ -337,7 +352,15 @@ foreach ($lists as $list){
   foreach ($tasks as $task){
     //This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
     echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
-    <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
+    <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div>
+		<form action = 'listView.php?board=".$_GET['board']."' method = 'POST' style='display:inline-block;'> 
+			      <input type='hidden' name='Archive' value=".$task['taskID'].">
+			      <input type='hidden' name='ArchiveID' value=".$task['taskID'].">
+			      <button type='submit' class='btn btn-danger' style='display:inline-block;''>
+			      Archive
+			      </button>
+		</form>
+    </li>";
   }
   echo " 
   </ul> 
@@ -346,7 +369,7 @@ foreach ($lists as $list){
 	</div>";
 }
 echo "</div>";
-
+}
 //Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
 <div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
