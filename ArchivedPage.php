@@ -63,22 +63,25 @@ if (!empty($_POST['UnArchiveID'])){
 }
 
 // get complete details for a list
-$query = " 
+
+$query = "
     SELECT 
-        DISTINCT(t.taskID),
-        t.taskTitle,
-        t.description,
-        t.dueDate,
-        t.taskDateCreated,
-        t.importance,
-        t.typeOfWork,
+        DISTINCT(t.taskID), 
+        t.taskTitle, 
+        t.description, 
+        t.dueDate, 
+        t.taskDateCreated, 
+        t.importance, 
+        t.typeOfWork, 
         c.courseTitle 
     FROM task t INNER JOIN course c INNER JOIN taskList l INNER JOIN board b 
-    WHERE t.archived = 1 AND b.`u.WATIAM` =:WATIAM
+    WHERE t.archived = 1 AND b.`u.WATIAM` =:WATIAM and c.courseID=t.`c.courseID` and t.`tl.listID`=l.listID and l.boardID=b.boardID and b.boardID=:BoardID
     "; 
+
     $query_params = array( 
-        ':WATIAM' => $_SESSION['user'],
-    ); 
+      ':WATIAM' => $_SESSION['user'],
+      'BoardID' => $board['boardID']
+  ); 
     $stmt = $db->prepare($query); 
     $result = $stmt->execute($query_params);       
     $tasks = $stmt->fetchAll();
@@ -90,6 +93,7 @@ $query = "
         <div class='card-header'>
         <div class ='card-Title'>Archived List</div>
         </div>
+        <div class='scroll'>
         <ul class='list-group list-group-flush'>
         ";
     foreach ($tasks as $task){
@@ -99,6 +103,7 @@ $query = "
     }
         echo " 
         </ul>
+        </div>
         </div>
         </div>";
     echo "</div>";

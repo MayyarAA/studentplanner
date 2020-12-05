@@ -12,9 +12,25 @@
     margin-right: 10px;
 }
 
-.card {
+.scroll {
+    overflow-y: auto;
+}
+
+.BoardCard {
     margin: 20px 20px 20px 20px;
     max-width: 500px;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.card {
+    /* background-color: red !important; */
+    height: 300px;
+    margin: 20px 20px 20px 20px;
+    max-width: 500px;
+    min-width: 200px;
 }
 
 .card-header .btn {
@@ -51,4 +67,22 @@
 
 .taskDesc-formatting {
     margin-left: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+ ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+ ::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 10px;
+}
+
+ ::-webkit-scrollbar-thumb:hover {
+    background: black;
 }
