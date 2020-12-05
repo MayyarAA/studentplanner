@@ -254,17 +254,16 @@ foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
   //Each list name can be clicked to access the filtering functionality(UX needs to be improved a little)
 	echo "
-	<div class='col-xs-3'>
-	<div class='card'>
-	<div class='card-header'>
-    <div class ='card-Title' data-toggle='modal' data-target='#filterList".$list['listID']."'>
-      ".$list['listTitle']."  
+    <div class='col-xs-3'>
+    <div class='card'>
+    <div class='card-header'>
+      <div class ='card-Title' data-toggle='modal' data-target='#filterList".$list['listID']."'>
+        ".$list['listTitle']."  
+      </div>
     </div>
-  </div>
-
-
-	<ul class='list-group list-group-flush'>
+    <ul class='list-group list-group-flush'>
   ";
+  // Check if filter/sort feature was selected by user and build a filtered query based on user inputs
   if ($list['listID'] == $_POST['filterListID']) {
     if (!empty($_POST["filter"])) {
       // get user inputs for properties
@@ -323,6 +322,7 @@ foreach ($lists as $list){
       $stmt->execute(array($list['listID']));       
       $tasks = $stmt->fetchAll();
     } else { 
+      // if no filter is selected, output all tasks in the task list
       $stmt = $db->prepare('SELECT * FROM task WHERE `tl.listID` = ? and archived = 0');
       $stmt->execute(array($list['listID']));       
       $tasks = $stmt->fetchAll();
@@ -333,14 +333,13 @@ foreach ($lists as $list){
     $tasks = $stmt->fetchAll();
   }
 
-    foreach ($tasks as $task){
-      //This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
-      echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
-      <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
-    }
-    echo " 
-    </ul>
-    
+  foreach ($tasks as $task){
+    //This code is run FOR EACH task in each list. Here we output an html row with some data. It also lets it target a custom modal to pop up each viewTask
+    echo "<li class='list-group-item' data-toggle='modal' data-target='#viewTask".$task['taskID']."'>
+    <div class='taskTitle-formatting'>".$task['taskTitle']."</div>"."\n<div class='taskDesc-formatting'>".$task['description']."</div></li>";
+  }
+  echo " 
+  </ul>
 	</div>
 	</div>";
 }
@@ -463,15 +462,16 @@ foreach ($lists as $list) {
           <!-- <iframe sandbox="allow-top-navigation allow-scripts allow-forms" class="embed-responsive-item" id="filterListFrame" style="border:0; width:558px; height:700px;" src="listView.php"></iframe> -->
           <form action="listView.php?board=<?php echo $board['boardID']; ?>" method="POST"> 
               <input type="hidden" name="filterListID" value="<?php echo $list['listID']; ?>"> 
-              <br>
+              <h5>Filter task options:</h5>             
               <input type="text" name="filt_name" value="" class="form-control" placeholder="Task Title" maxlength="255"/>
-              <br>
+              <small id="" class="form-text text-muted">Enter the exact name of a task</small> <br>              
               <input type="number" name="filt_effort" value="" class="form-control" placeholder="Importance" min = "0" max = "10" step="1"/>
-              <br>
+              <small id="" class="form-text text-muted">Choose the importance of a task</small> <br>              
               <input type="text" name="filt_work" value="" class="form-control" placeholder="Type of Work" maxlength="255"/>
-              <br>
+              <small id="" class="form-text text-muted">Enter the type of work</small> <br>
               <input type="datetime-local" name="filt_date" value="unchanged" class="form-control" placeholder="Due Date"/>
-              <br>
+              <small id="" class="form-text text-muted">Choose the due date of task</small> <br>              
+              <h5>Sort task options:</h5>
               <select name="sortTask">
                   <option value="" disabled selected>Sort Task By</option>
                   <optgroup label="Sort by Title">
