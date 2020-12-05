@@ -9,4 +9,8 @@ The objective of this project is develop a platform for students to schedule the
 A working version of the application will be available here: https://mansci-db.uwaterloo.ca/~wmmeyer
 
 #### Updates
-Sprint 1: Planning Artifact (Primary Prototype)
+Sprint 1: Primary Prototype(Minimum Viable Product)
+
+Sprint 2: Added list and task functionality
+
+Sprint 3: Added board functionality, improved on list/task functionality
