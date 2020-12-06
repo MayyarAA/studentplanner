@@ -245,6 +245,18 @@ if (!empty($_POST['addListID']) && !empty($_POST['addTaskTitle'])){
 $stmt = $db->prepare('SELECT * FROM taskList WHERE boardID = ? ORDER BY `listID` ASC');
             $stmt->execute(array($_GET['board']));       
             $lists = $stmt->fetchAll();
+if ($stmt->rowCount() == 0) {
+  //There is no lists, show the user an "empty board" message
+?>
+<div class="row">
+	<div class="jumbotron">
+		  <h1 class="display-4">Empty Board</h1>
+		  <p class="lead">The board you have selected is empty. Click "Create List" to get started</p>
+	</div>
+</div>
+<?php
+} else {
+   
 echo "<div class='row'>";
 foreach ($lists as $list){
   //This code is run FOR EACH list that exists.
@@ -357,7 +369,7 @@ foreach ($lists as $list){
 	</div>";
 }
 echo "</div>";
-
+}
 //Below we have the code for our "modal" which pops up when the user clicks the add new list button. It is a simple form that submits back here for a "page refresh" with the new list.
 ?>
 <div class="modal fade" id="createList" tabindex="-1" aria-labelledby="createList" aria-hidden="true">
