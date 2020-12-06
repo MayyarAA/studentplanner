@@ -112,7 +112,8 @@ $query = "
 </head>
 <div class="jumbotron">
         <div class="container">
-            <h2 class="display-5">Welcome <?php echo $_SESSION['user']; ?></h2>
+        <h1 class="display-5"> Homepage </h1>
+            <h3 class="display-5">Welcome <?php echo $_SESSION['user']; ?></h3>
             <a href="logout.php" class="btn btn-warning">Logout</a>
         </div>
 </div>

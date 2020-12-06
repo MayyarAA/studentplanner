@@ -28,7 +28,8 @@ $stmt = $db->prepare('SELECT * FROM board WHERE boardID = ?');
     <body>
     <div class="jumbotron">
         <div class="container">
-            <h2 class="display-5"><?php echo $board['boardTitle']; ?> Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']);?> by <?php echo $board['u.WATIAM']; ?> </h2>
+            <!-- <h2 class="display-5"><?php echo $board['boardTitle']; ?> Created <?php echo date("Y-m-d H:i:s", $board['boardDateCreated']);?> by <?php echo $board['u.WATIAM']; ?> </h2> -->
+            <h2 class="display-5"> Archive of <?php echo $board['boardTitle']; ?> Created  by <?php echo $board['u.WATIAM']; ?> </h2>
             <a class="btn btn-primary" href="listView.php?board=<?php echo $board['boardID']; ?>">Back</a>
         </div>
     </div>
